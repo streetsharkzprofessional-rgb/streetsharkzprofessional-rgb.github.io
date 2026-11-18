@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add("js");</script>
+  <title>Members Portal — Street Sharkz Professional</title>
+  <meta name="description" content="Members Portal for Street Sharkz Professional. Email yourself a 6-digit code, then open the desk, the ladder, and the Back Door.">
+  <link rel="canonical" href="https://www.streetsharkz.com/portal">
+  <meta property="og:site_name" content="Street Sharkz Professional">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Members Portal — Street Sharkz Professional">
+  <meta property="og:description" content="Email yourself a 6-digit code. The desk, the ladder, and the Back Door open from here.">
+  <meta property="og:url" content="https://www.streetsharkz.com/portal">
+  <meta property="og:image" content="https://www.streetsharkz.com/assets/img/ss-hex-logo-official.jpg">
+  <meta property="og:image:alt" content="Street Sharkz Professional hexagon mark">
+  <meta name="theme-color" content="#050b14">
+  <link rel="icon" href="assets/img/ss-hex-logo-official.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-sub" data-page="portal">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="nav-brand" href="index.html">
+      <picture>
+        <source type="image/webp" srcset="assets/img/ss-hex-logo-96.webp 96w" sizes="40px">
+        <img src="assets/img/ss-hex-logo-official.jpg" alt="" width="1170" height="1170">
+      </picture>
+      <span class="nav-word">Street Sharkz</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Primary">
+      <a href="assessment.html">Assessment</a>
+      <a href="index.html#sharkonomicz">Sharkonomicz</a>
+      <a href="index.html#peak">Peak</a>
+      <a href="index.html#book">Book</a>
+      <a href="index.html#engine">Engine</a>
+      <a href="index.html#about">About</a>
+      <a class="btn btn-solid nav-portal" href="portal.html" aria-current="page">Portal</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="section">
+      <div class="wrap">
+        <section id="gate">
+          <div class="narrow">
+            <p class="eyebrow">Members only</p>
+            <h1>Members Portal</h1>
+            <p class="lede-left">Email yourself a 6-digit code. The desk opens on this page. Nothing here prints a private address.</p>
+            <form id="gate-form" class="gate" novalidate>
+              <div class="field">
+                <label for="gate-email">Email</label>
+                <input id="gate-email" name="email" type="email" autocomplete="username" required>
+              </div>
+              <button class="btn btn-solid" type="button" id="send-code">Email me my code</button>
+              <div id="code-step" hidden>
+                <div class="field cta-row">
+                  <label for="gate-code">6-digit code</label>
+                  <input id="gate-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required>
+                </div>
+                <button class="btn btn-ghost" type="button" id="confirm-code">Confirm code</button>
+              </div>
+              <p id="gate-status" class="status" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </section>
+        <section id="member-home" hidden>
+          <header class="desk-head">
+            <div>
+              <p class="eyebrow">Members Portal</p>
+              <h1 id="desk-name">Member</h1>
+              <p id="desk-meta" class="mono"></p>
+            </div>
+            <button class="btn btn-ghost" type="button" id="sign-out">Sign out</button>
+          </header>
+          <div class="tabs" role="tablist" aria-label="Member desk">
+            <button role="tab" id="tab-app" type="button" aria-selected="true" aria-controls="panel-app">My App</button>
+            <button role="tab" id="tab-ladder" type="button" aria-selected="false" aria-controls="panel-ladder" tabindex="-1">Leaderboard</button>
+            <button role="tab" id="tab-learn" type="button" aria-selected="false" aria-controls="panel-learn" tabindex="-1">Learn</button>
+            <button role="tab" id="tab-door" type="button" aria-selected="false" aria-controls="panel-door" tabindex="-1">Back Door</button>
+          </div>
+          <div role="tabpanel" id="panel-app" aria-labelledby="tab-app" class="panel" tabindex="0"></div>
+          <div role="tabpanel" id="panel-ladder" aria-labelledby="tab-ladder" class="panel" tabindex="0" hidden></div>
+          <div role="tabpanel" id="panel-learn" aria-labelledby="tab-learn" class="panel" tabindex="0" hidden></div>
+          <div role="tabpanel" id="panel-door" aria-labelledby="tab-door" class="panel" tabindex="0" hidden>
+            <h2>Back Door</h2>
+            <p class="lede-left">The intel wire, the big screen, and the founders' floor.</p>
+            <p class="cta-row"><a class="btn btn-solid" href="room.html">Enter the Back Door</a></p>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p>We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+        <p class="signoff">Stay sharked UP</p>
+      </div>
+      <div>
+        <p class="footer-label">Contact</p>
+        <p><a href="mailto:Office@StreetSharkz.com">Office@StreetSharkz.com</a></p>
+        <p><a href="tel:+18623100775">+1 862-310-0775</a></p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="assessment.html">Assessment</a>
+        <a href="room.html">Back Door</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="api.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

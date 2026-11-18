@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add("js");</script>
+  <title>Sharked Up Assessment — Street Sharkz Professional</title>
+  <meta name="description" content="Take the free Sharked Up Assessment. A brief profile, then your individual report and market data assets, including your strongest and weakest pillars.">
+  <link rel="canonical" href="https://www.streetsharkz.com/assessment">
+  <meta property="og:site_name" content="Street Sharkz Professional">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Sharked Up Assessment — Street Sharkz Professional">
+  <meta property="og:description" content="A brief profile. Your individual report and market data assets come back free, with your strongest and weakest pillars.">
+  <meta property="og:url" content="https://www.streetsharkz.com/assessment">
+  <meta property="og:image" content="https://www.streetsharkz.com/assets/img/ss-hex-logo-official.jpg">
+  <meta property="og:image:alt" content="Street Sharkz Professional hexagon mark">
+  <meta name="theme-color" content="#050b14">
+  <link rel="icon" href="assets/img/ss-hex-logo-official.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-sub" data-page="assessment">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="nav-brand" href="index.html">
+      <picture>
+        <source type="image/webp" srcset="assets/img/ss-hex-logo-96.webp 96w" sizes="40px">
+        <img src="assets/img/ss-hex-logo-official.jpg" alt="" width="1170" height="1170">
+      </picture>
+      <span class="nav-word">Street Sharkz</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav id="site-nav" aria-label="Primary">
+      <a href="assessment.html" aria-current="page">Assessment</a>
+      <a href="index.html#sharkonomicz">Sharkonomicz</a>
+      <a href="index.html#peak">Peak</a>
+      <a href="index.html#book">Book</a>
+      <a href="index.html#engine">Engine</a>
+      <a href="index.html#about">About</a>
+      <a class="btn btn-solid nav-portal" href="portal.html">Portal</a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="section">
+      <div class="wrap narrow">
+        <p class="eyebrow"><span>00</span> Free</p>
+        <h1>Sharked Up Assessment</h1>
+        <div class="prose stack">
+          <p>The Sharked Up Assessment is a brief profile, designed to capture only the essential information needed to understand where you are and where you want to go. We keep this process minimal and focused so we can quickly identify the most effective path forward for your business and professional image, without wasting your time on unnecessary detail.</p>
+          <p>Step 1. Fill out the assessment.</p>
+          <p>Step 2. Receive your individual report and market data assets, free.</p>
+          <p>From there, you are able to map out a structured approach to improvement — tightening processes, eliminating inefficiencies, and implementing systems that produce more consistent, predictable results. The objective is simple: stronger operations, cleaner execution, and measurable growth.</p>
+          <p>Your report also includes a deeper diagnostic of your strongest and weakest pillars. That deeper diagnostic is free, with the report and the market data assets.</p>
+        </div>
+        <form id="assessment-form" class="form-card" hidden novalidate>
+          <div id="form-errors" class="form-errors" role="alert" tabindex="-1" hidden></div>
+          <div id="question-root"></div>
+          <fieldset id="delivery-set">
+            <legend>Where should we send the report?</legend>
+            <div class="field">
+              <label for="report-email">Email</label>
+              <input id="report-email" name="email" type="email" autocomplete="email" required>
+            </div>
+            <div class="field">
+              <label for="report-phone">Phone</label>
+              <input id="report-phone" name="phone" type="tel" autocomplete="tel">
+              <p class="hint">Required if you want the report by text message.</p>
+            </div>
+            <p class="hint">Delivery</p>
+            <label class="choice"><input type="radio" name="delivery" value="Email" required> Email</label>
+            <label class="choice"><input type="radio" name="delivery" value="Text message"> Text message</label>
+            <label class="choice"><input type="radio" name="delivery" value="Both"> Both</label>
+          </fieldset>
+          <button class="btn btn-solid" type="submit">Send my assessment</button>
+        </form>
+        <div id="assessment-done" class="done" hidden tabindex="-1">
+          <h2>Your assessment is in.</h2>
+          <p>Your individual report and market data assets are on the way, free. They include a deeper diagnostic of your strongest and weakest pillars.</p>
+          <p id="pillar-result" class="cta-row"></p>
+          <p class="cta-row"><a class="btn btn-ghost" href="index.html">Return home</a></p>
+        </div>
+        <noscript><p class="noscript">The questions load with the page script. The description above still stands. Email Office@StreetSharkz.com if you need the assessment another way.</p></noscript>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap footer-grid">
+      <div>
+        <p>We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+        <p class="signoff">Stay sharked UP</p>
+      </div>
+      <div>
+        <p class="footer-label">Contact</p>
+        <p><a href="mailto:Office@StreetSharkz.com">Office@StreetSharkz.com</a></p>
+        <p><a href="tel:+18623100775">+1 862-310-0775</a></p>
+        <p>Camden, New Jersey</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="index.html">Home</a>
+        <a href="assessment.html">Assessment</a>
+        <a href="seller.html">Systems diagnostic</a>
+        <a href="portal.html">Members Portal</a>
+      </nav>
+    </div>
+  </footer>
+  <script src="api.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

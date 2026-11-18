@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add("js");</script>
+  <title>Back Door Terminal — Street Sharkz Professional</title>
+  <meta name="description" content="Back Door Terminal. Eyes-only wire, the big screen, and the founders' floor for Street Sharkz members.">
+  <link rel="canonical" href="https://www.streetsharkz.com/room">
+  <meta property="og:site_name" content="Street Sharkz Professional">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Back Door Terminal — Street Sharkz Professional">
+  <meta property="og:description" content="Eyes-only wire, the big screen, and the founders' floor.">
+  <meta property="og:url" content="https://www.streetsharkz.com/room">
+  <meta property="og:image" content="https://www.streetsharkz.com/assets/img/ss-hex-logo-official.jpg">
+  <meta property="og:image:alt" content="Street Sharkz Professional hexagon mark">
+  <meta name="theme-color" content="#050b14">
+  <link rel="icon" href="assets/img/ss-hex-logo-official.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-room" data-page="room">
+  <a class="skip" href="#main">Skip to the terminal</a>
+  <div class="wire" id="wire">
+    <p class="wire-label">INTEL WIRE — EYES ONLY</p>
+    <div class="wire-viewport">
+      <div class="wire-track" id="wire-track">
+        <div class="wire-row">
+          <p class="wire-item wire-static"><span class="redact" aria-hidden="true"></span> The wire opens with your code.</p>
+        </div>
+      </div>
+    </div>
+    <div class="wire-pin" id="wire-pin" hidden></div>
+  </div>
+  <main id="main">
+    <section id="room-locked" class="section">
+      <div class="wrap narrow">
+        <p class="eyebrow">Eyes only</p>
+        <h1>Back Door Terminal</h1>
+        <p class="lede-left">The wire, the screen, and the floor open from the Members Portal.</p>
+        <p class="cta-row"><a class="btn btn-solid" href="portal.html">Enter the Members Portal</a></p>
+      </div>
+    </section>
+    <div id="room-open" hidden>
+      <div class="room-bar">
+        <div>
+          <p class="eyebrow">Eyes only</p>
+          <h1>Back Door Terminal</h1>
+          <p id="room-who" class="mono"></p>
+        </div>
+        <div class="room-actions">
+          <a href="portal.html">Portal</a>
+          <button class="btn btn-ghost" type="button" id="room-out">Sign out</button>
+        </div>
+      </div>
+      <section class="section" id="screen-section">
+        <div class="wrap">
+          <p class="eyebrow"><span>01</span> The big screen</p>
+          <h2>Global desk</h2>
+          <p class="lede-left">A mix of public broadcast and our own clips. News opens at its source. Our clips play on this screen.</p>
+          <div id="screen-frame"></div>
+          <h3 class="screen-title" id="screen-title">Standing by</h3>
+          <p class="roll">The screen rolls on the half hour. Next roll <time id="next-roll">—</time>.</p>
+        </div>
+      </section>
+      <section class="section" id="founder-stack">
+        <div class="wrap">
+          <h2>Founders' stack</h2>
+        </div>
+      </section>
+      <section class="section" id="releases">
+        <div class="wrap"></div>
+      </section>
+      <section class="section" id="floor">
+        <div class="wrap">
+          <h2>Founders' floor</h2>
+          <form id="floor-form" class="form-card">
+            <div class="field">
+              <label for="floor-text">Post to the floor</label>
+              <textarea id="floor-text" name="text" maxlength="600" required></textarea>
+            </div>
+            <button class="btn btn-solid" type="submit">Post</button>
+            <p id="floor-status" class="status" role="status" aria-live="polite"></p>
+          </form>
+          <div id="floor-list" class="cta-row"></div>
+        </div>
+      </section>
+      <section class="section" id="room-ladder">
+        <div class="wrap"></div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer site-footer-slim">
+    <div class="wrap">
+      <p>We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+      <p><a href="mailto:Office@StreetSharkz.com">Office@StreetSharkz.com</a> · <a href="tel:+18623100775">+1 862-310-0775</a></p>
+      <p class="signoff">Stay sharked UP</p>
+    </div>
+  </footer>
+  <script src="api.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
