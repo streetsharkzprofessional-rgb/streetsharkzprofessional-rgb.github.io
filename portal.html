@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sharked Up OS — Members Portal · Street Sharkz Professional</title>
+<meta name="description" content="Sharked Up OS members portal — Peak Performance™ members enter here. Email, code, dive.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/img/ss-hex-logo-official.jpg">
+</head>
+<body>
+<div class="depth" aria-hidden="true"></div>
+
+<header class="site">
+  <div class="wrap nav">
+    <a class="brand" href="index.html">
+      <img src="assets/img/ss-hex-logo-official.jpg" alt="Street Sharkz Professional">
+      <span><b>STREET SHARKZ</b><small>PROFESSIONAL</small></span>
+    </a>
+    <nav>
+      <a href="index.html">← streetsharkz.com</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="blk">
+
+    <!-- ================= THE GATE ================= -->
+    <div class="gate" id="gate">
+      <img src="assets/img/skywalker-family-crest.png" alt="Skywalker family crest" style="width:76px;margin:0 auto 14px;filter:drop-shadow(0 6px 20px rgba(201,162,39,.25))">
+      <h2>Sharked Up OS — Members Portal</h2>
+      <p class="sub">Peak Performance™ members enter here.</p>
+
+      <form class="fin" id="gateForm" autocomplete="on">
+        <div id="step1">
+          <label>Your member email
+            <input type="email" id="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required>
+          </label>
+          <button class="btn" type="submit" id="sendBtn" style="justify-content:center;width:100%;margin-top:14px">Email Me My Code</button>
+        </div>
+
+        <div id="step2" hidden>
+          <p class="dim" style="font-size:14px">Your code is on its way to <b class="gold" id="sentTo"></b> — it expires in 15 minutes.</p>
+          <label>6-digit code
+            <input type="text" id="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]*" maxlength="6" placeholder="••••••" style="letter-spacing:.4em;text-align:center;font-family:var(--mono);font-size:19px">
+          </label>
+          <button class="btn" type="submit" id="enterBtn" style="justify-content:center;width:100%;margin-top:14px">Enter</button>
+          <p style="text-align:center;margin-top:12px"><a href="#" id="resend" style="font-size:13.5px">Send a new code</a></p>
+        </div>
+
+        <p class="dim" id="gateErr" role="alert" style="min-height:1.4em;text-align:center;font-size:14px"></p>
+      </form>
+
+      <p class="dim" style="text-align:center;font-size:13px;margin-top:6px">Access is personal to the email it was issued to.<br>Not a member yet? <a href="index.html#doors">Choose your depth →</a></p>
+    </div>
+
+    <!-- ================= MEMBER HOME ================= -->
+    <div id="home" hidden>
+      <div style="text-align:center;max-width:720px;margin:0 auto">
+        <img src="assets/img/skywalker-family-crest.png" alt="" style="width:58px;margin:0 auto 10px;opacity:.92">
+        <h2 style="font-size:clamp(26px,4vw,36px)">Welcome aboard, <span class="gold" id="mName">Shark</span></h2>
+        <p style="margin-top:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span id="mTier" style="font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--gold-hi);border:1px solid var(--gold);border-radius:999px;padding:6px 13px"></span>
+          <span id="mSeat" hidden style="font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--cyan);border:1px solid rgba(87,199,227,.45);border-radius:999px;padding:6px 13px"></span>
+        </p>
+        <p style="margin-top:12px"><button class="btn ghost small" type="button" id="signOut">Sign Out</button></p>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button type="button" data-tab="app" class="on">My App</button>
+        <button type="button" data-tab="board">Leaderboard</button>
+        <button type="button" data-tab="learn">Learn</button>
+        <button type="button" data-tab="door">Back Door</button>
+      </div>
+
+      <div class="panel" id="pane-app" style="max-width:720px;margin:0 auto;text-align:center">
+        <h3>Peak Performance™</h3>
+        <p>Five pillars — hydration, nutrition, fitness, mind, economics. One ninety-day plan. Deckhand to Apex.</p>
+        <div class="row" style="justify-content:center">
+          <a class="btn" id="enterApp" href="#">Enter Peak Performance™</a>
+        </div>
+        <p class="dim" id="appNote" hidden style="margin-top:14px;font-size:14px">For your security, enter from a fresh code — sign out and sign back in, and your Enter button lights up again.</p>
+      </div>
+
+      <div class="panel" id="pane-board" hidden style="max-width:720px;margin:0 auto">
+        <h3>Leaderboard</h3>
+        <p class="dim" style="margin-bottom:8px">Career dive days, then streak. The fin follows the living streak.</p>
+        <div id="lbList"><p class="dim">Reading the board…</p></div>
+      </div>
+
+      <div class="panel" id="pane-learn" hidden style="max-width:720px;margin:0 auto">
+        <h3>Learn</h3>
+        <p class="dim">The shelf for your tier — start where every Shark starts.</p>
+        <div id="learnList"><p class="dim">Opening the shelf…</p></div>
+      </div>
+
+      <div class="panel" id="pane-door" hidden style="max-width:720px;margin:0 auto">
+        <h3>The Back Door</h3>
+        <div id="doorBody"><p class="dim">Checking your pass…</p></div>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="signoff">
+      <p class="king">We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+      <p style="margin-top:6px">Stay Sharked Up.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="api.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  var pass = null;        // in memory + sessionStorage; never rendered
+  var member = null;      // {tier, seat, name, username, email}
+  var appUrl = null;      // in memory only — a fresh code re-mints it
+  var loaded = {};        // lazy pane flags
+
+  var gateErr = $("gateErr");
+  function gateSay(msg) { gateErr.textContent = msg || ""; }
+
+  /* ---------- gate flow ---------- */
+  var step = 1;
+  $("gateForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    if (step === 1) sendCode(); else confirmIt();
+  });
+  $("resend").addEventListener("click", function (e) {
+    e.preventDefault();
+    step = 1;
+    $("step2").hidden = true;
+    $("step1").hidden = false;
+    gateSay("");
+    $("email").focus();
+  });
+
+  function sendCode() {
+    var email = $("email").value.trim();
+    if (!email) { gateSay("Enter the email you paid with."); return; }
+    var btn = $("sendBtn");
+    btn.disabled = true; gateSay("Sending your code…");
+    PortalAPI.call("sendMyCode", email).then(function (r) {
+      btn.disabled = false;
+      if (!r || !r.ok) { gateSay((r && r.error) || "That email could not be reached. Try again."); return; }
+      step = 2;
+      $("sentTo").textContent = email;
+      $("step1").hidden = true;
+      $("step2").hidden = false;
+      gateSay("");
+      $("code").focus();
+    }).catch(function (err) {
+      btn.disabled = false;
+      gateSay(err.message || "Something went quiet. Try again.");
+    });
+  }
+
+  function confirmIt() {
+    var email = $("email").value.trim();
+    var code = $("code").value.trim();
+    if (!code) { gateSay("Enter the 6-digit code from your email."); return; }
+    var btn = $("enterBtn");
+    btn.disabled = true; gateSay("Checking your code…");
+    PortalAPI.call("confirmCode", email, code).then(function (r) {
+      btn.disabled = false;
+      if (!r || !r.ok) { gateSay((r && r.error) || "That code was not accepted."); return; }
+      pass = r.pass;
+      member = { tier: r.tier || "", seat: r.seat || null, name: r.name || "", username: r.username || "", email: email };
+      appUrl = r.url || null;
+      try {
+        sessionStorage.setItem("ssp_pass", pass);
+        sessionStorage.setItem("ssp_member", JSON.stringify(member));
+      } catch (e) {}
+      showHome(false);
+    }).catch(function (err) {
+      btn.disabled = false;
+      gateSay(err.message || "Something went quiet. Try again.");
+    });
+  }
+
+  /* ---------- member home ---------- */
+  function showHome(restored) {
+    $("gate").hidden = true;
+    $("home").hidden = false;
+    $("mName").textContent = member.name || member.username || "Shark";
+    $("mTier").textContent = member.tier || "MEMBER";
+    if (member.tier === "FOUNDING" && member.seat) {
+      $("mSeat").hidden = false;
+      $("mSeat").textContent = "FOUNDING MEMBER #" + member.seat + " OF 100";
+    }
+    if (restored || !appUrl) {
+      $("enterApp").hidden = true;
+      $("appNote").hidden = false;
+    } else {
+      $("enterApp").hidden = false;
+      $("enterApp").href = appUrl;
+      $("appNote").hidden = true;
+    }
+    renderDoor();
+  }
+
+  $("signOut").addEventListener("click", function () {
+    try { sessionStorage.removeItem("ssp_pass"); sessionStorage.removeItem("ssp_member"); } catch (e) {}
+    location.reload();
+  });
+
+  /* tabs */
+  var tabBtns = document.querySelectorAll(".tabs button");
+  tabBtns.forEach(function (b) {
+    b.addEventListener("click", function () {
+      tabBtns.forEach(function (x) { x.classList.toggle("on", x === b); });
+      ["app", "board", "learn", "door"].forEach(function (t) {
+        $("pane-" + t).hidden = t !== b.dataset.tab;
+      });
+      if (b.dataset.tab === "board") loadLeaderboard();
+      if (b.dataset.tab === "learn") loadResources();
+      if (b.dataset.tab === "door" && member && member.tier === "FOUNDING") loadDrops();
+    });
+  });
+
+  function loadLeaderboard() {
+    if (loaded.board) return; loaded.board = true;
+    PortalAPI.call("getLeaderboard", pass).then(function (r) {
+      var box = $("lbList");
+      if (!r || !r.ok) { box.innerHTML = '<p class="dim">' + esc((r && r.error) || "The board is quiet. Try again shortly.") + "</p>"; loaded.board = false; return; }
+      if (!r.board || !r.board.length) { box.innerHTML = '<p class="dim">No dives logged yet. The first Shark to feed takes the top seat.</p>'; return; }
+      box.innerHTML = r.board.map(function (row, i) {
+        return '<div class="lb-row"><span><b>#' + (i + 1) + " " + esc(row.username || "Shark") + '</b> · ' + esc(row.rankName || "") +
+          (row.finState ? ' · <span class="cyan">' + esc(row.finState) + "</span>" : "") +
+          '</span><span>' + Number(row.careerDays || 0) + " days · streak " + Number(row.streak || 0) + "</span></div>";
+      }).join("");
+    }).catch(function (err) {
+      loaded.board = false;
+      $("lbList").innerHTML = '<p class="dim">' + esc(err.message) + "</p>";
+    });
+  }
+
+  function loadResources() {
+    if (loaded.learn) return; loaded.learn = true;
+    PortalAPI.call("getResources", pass).then(function (r) {
+      var box = $("learnList");
+      if (!r || !r.ok) { box.innerHTML = '<p class="dim">' + esc((r && r.error) || "The shelf is quiet. Try again shortly.") + "</p>"; loaded.learn = false; return; }
+      if (!r.resources || !r.resources.length) { box.innerHTML = '<p class="dim">Nothing on your shelf yet — new drops land here.</p>'; return; }
+      box.innerHTML = r.resources.map(function (res) {
+        return '<div class="pack"><div><b>' + esc(res.title) + "</b>" +
+          (res.type ? ' <span class="dim" style="font-family:var(--mono);font-size:11px;letter-spacing:.14em">· ' + esc(res.type).toUpperCase() + "</span>" : "") +
+          (res.note ? '<div class="dim" style="font-size:13.5px">' + esc(res.note) + "</div>" : "") +
+          '</div>' + (res.url ? '<a class="btn ghost small" href="' + esc(res.url) + '" target="_blank" rel="noopener">Open</a>' : "") + "</div>";
+      }).join("");
+    }).catch(function (err) {
+      loaded.learn = false;
+      $("learnList").innerHTML = '<p class="dim">' + esc(err.message) + "</p>";
+    });
+  }
+
+  /* back door pane */
+  function renderDoor() {
+    var box = $("doorBody");
+    if (!member || member.tier !== "FOUNDING") {
+      box.innerHTML = '<p>The Back Door is for Founding Members.</p>' +
+        '<p class="dim" style="margin-top:8px">One hundred seats. A private room, founder-only drops, and the floor — behind this door.</p>' +
+        '<div class="row"><a class="btn ghost small" href="index.html#doors">See the Founding door →</a></div>';
+      return;
+    }
+    box.innerHTML = '<p class="dim">Founder-only drops, most recent first.</p><div id="dropsList"><p class="dim">Opening the back room…</p></div>' +
+      '<div class="row"><a class="btn" href="room.html?pass=' + encodeURIComponent(pass) + '">Enter the Back Door</a></div>';
+  }
+
+  function loadDrops() {
+    if (loaded.drops) return; loaded.drops = true;
+    PortalAPI.call("getDrops", pass).then(function (r) {
+      var box = $("dropsList");
+      if (!box) return;
+      if (!r || !r.ok) { box.innerHTML = '<p class="dim">' + esc((r && r.error) || "The drops are quiet. Try again shortly.") + "</p>"; loaded.drops = false; return; }
+      if (!r.drops || !r.drops.length) { box.innerHTML = '<p class="dim">No drops yet — the first release lands here.</p>'; return; }
+      box.innerHTML = r.drops.map(function (d) {
+        return '<div class="pack"><div><b>' + esc(d.title) + "</b>" +
+          ' <span class="dim" style="font-family:var(--mono);font-size:11px;letter-spacing:.14em">· ' + esc(d.category || "DROP").toUpperCase() + (d.date ? " · " + esc(d.date) : "") + "</span>" +
+          (d.body ? '<div class="dim" style="font-size:13.5px">' + esc(d.body) + "</div>" : "") +
+          '</div>' + (d.url ? '<a class="btn ghost small" href="' + esc(d.url) + '" target="_blank" rel="noopener">Open</a>' : "") + "</div>";
+      }).join("");
+    }).catch(function (err) {
+      loaded.drops = false;
+      var box = $("dropsList");
+      if (box) box.innerHTML = '<p class="dim">' + esc(err.message) + "</p>";
+    });
+  }
+
+  /* ---------- restore session ---------- */
+  try {
+    var savedPass = sessionStorage.getItem("ssp_pass");
+    var savedMember = sessionStorage.getItem("ssp_member");
+    if (savedPass && savedMember) {
+      pass = savedPass;
+      member = JSON.parse(savedMember);
+      showHome(true);
+    }
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>

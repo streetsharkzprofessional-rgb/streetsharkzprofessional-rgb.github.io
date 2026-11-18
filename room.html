@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Back Door — Founders Terminal · Street Sharkz Professional</title>
+<meta name="description" content="The Back Door — the founders terminal. Global intel on the big screen, releases, the floor, the board. Founding Members only.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="assets/img/ss-hex-logo-official.jpg">
+</head>
+<body>
+
+<!-- ================= INTEL WIRE (sticky, never leaves the screen) ================= -->
+<div class="intelwire" aria-label="Intel wire">
+  <span class="track" id="wireTrack"><span class="lbl">INTEL WIRE — EYES ONLY</span>&nbsp;&nbsp;STANDING BY FOR DISPATCHES…</span>
+</div>
+
+<div class="depth" aria-hidden="true"></div>
+
+<main class="wrap">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:30px 0 6px">
+    <div>
+      <p style="font-family:var(--mono);font-size:11.5px;letter-spacing:.32em;color:var(--cyan)">PRIVATE FEED · FOUNDING MEMBERS ONLY</p>
+      <h1 style="font-size:clamp(26px,4.4vw,40px);margin-top:8px">THE BACK DOOR <span class="gold">— FOUNDERS TERMINAL</span></h1>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span id="mChip" hidden style="font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:var(--gold-hi);border:1px solid var(--gold);border-radius:999px;padding:7px 14px"></span>
+      <a class="btn ghost small" href="portal.html">← Members Portal</a>
+    </div>
+  </div>
+
+  <!-- gate card: no pass, or the engine said no -->
+  <section class="blk" id="roomGate" hidden>
+    <div class="gate">
+      <img src="assets/img/skywalker-family-crest.png" alt="Skywalker family crest" style="width:76px;margin:0 auto 14px;filter:drop-shadow(0 6px 20px rgba(201,162,39,.25))">
+      <h2>The Back Door</h2>
+      <p class="sub" id="gateMsg">This room opens from the Members Portal.</p>
+      <a class="btn" href="portal.html" style="justify-content:center;width:100%">Go to the Members Portal</a>
+    </div>
+  </section>
+
+  <div id="roomMain" hidden>
+    <!-- ================= THE BIG SCREEN — GLOBAL INTEL ================= -->
+    <section style="padding:22px 0 6px">
+      <div class="screen">
+        <iframe id="screenFrame" title="Global financial news" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer" hidden></iframe>
+        <span class="bug" id="screenBug">GLOBAL INTEL — STANDING BY</span>
+      </div>
+      <h3 id="screenTitle" style="font-size:21px;margin-top:14px">The wire is warming up…</h3>
+      <p class="dim" id="screenMeta" style="font-family:var(--mono);font-size:12.5px;letter-spacing:.06em"></p>
+      <p class="dim" style="font-size:13.5px;margin-top:4px">Global financial news, latest dispatches — a new video takes the screen every half hour.</p>
+    </section>
+
+    <!-- ================= FOUNDER VIDEOS (under the screen) ================= -->
+    <section style="padding:26px 0 6px">
+      <h3 style="font-size:20px;margin-bottom:6px">Founder Videos</h3>
+      <p class="dim" style="font-size:14px;margin-bottom:6px">Private drops from the Captain — founders only, stacked under the screen.</p>
+      <div class="panel" style="padding:10px 26px">
+        <div id="vidList"><p class="dim" style="padding:12px 0">Loading the stack…</p></div>
+      </div>
+    </section>
+
+    <!-- ================= RELEASES · THE FLOOR · THE BOARD ================= -->
+    <section class="split" style="padding:26px 0 10px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+      <div class="panel">
+        <h3>Releases</h3>
+        <div id="dropsList"><p class="dim">Opening the vault…</p></div>
+      </div>
+
+      <div class="panel">
+        <h3>The Floor</h3>
+        <form id="postForm">
+          <label style="display:grid;gap:7px;font-size:14px;color:var(--silver)">Say it to the room
+            <textarea id="postText" rows="3" maxlength="1000" placeholder="For founders' ears…" style="background:var(--abyss-1);border:1px solid var(--card-line);border-radius:12px;color:var(--ink);padding:12px 13px;font:inherit;font-size:14.5px;width:100%;resize:vertical"></textarea>
+          </label>
+          <div class="row" style="margin-top:10px">
+            <button class="btn small" type="submit" id="postBtn">Post to the Floor</button>
+            <span class="dim" id="postErr" role="alert" style="font-size:13.5px"></span>
+          </div>
+        </form>
+        <div id="postsList" style="margin-top:8px"><p class="dim">The floor is listening…</p></div>
+      </div>
+
+      <div class="panel">
+        <h3>Leaderboard</h3>
+        <p class="dim" style="margin-bottom:6px">Top ten in the room.</p>
+        <div id="roomBoard"><p class="dim">Reading the board…</p></div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <div class="signoff">
+      <p class="king">We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+      <p style="margin-top:6px">Stay Sharked Up.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="api.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function fmtWhen(raw) {
+    if (!raw) return "";
+    var d = new Date(raw);
+    if (isNaN(d.getTime())) return String(raw);
+    try {
+      return d.toLocaleString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) + " ET";
+    } catch (e) { return d.toLocaleString(); }
+  }
+  function fmtTime(raw) {
+    if (!raw) return "";
+    var d = new Date(raw);
+    if (isNaN(d.getTime())) return String(raw);
+    try {
+      return d.toLocaleString("en-US", { timeZone: "America/New_York", hour: "numeric", minute: "2-digit" }) + " ET";
+    } catch (e) { return d.toLocaleTimeString(); }
+  }
+
+  /* ---------- the pass: query first, session second; never displayed ---------- */
+  var pass = null;
+  try {
+    pass = new URLSearchParams(location.search).get("pass") || sessionStorage.getItem("ssp_pass") || null;
+  } catch (e) {
+    try { pass = sessionStorage.getItem("ssp_pass") || null; } catch (e2) {}
+  }
+
+  function showGate(msg) {
+    if (msg) $("gateMsg").textContent = msg;
+    $("roomMain").hidden = true;
+    $("roomGate").hidden = false;
+  }
+
+  if (!pass) { showGate("This room opens from the Members Portal."); return; }
+
+  var screenTimer = null;
+
+  function renderWire(headlines) {
+    var track = $("wireTrack");
+    if (!headlines || !headlines.length) {
+      track.innerHTML = '<span class="lbl">INTEL WIRE — EYES ONLY</span>&nbsp;&nbsp;THE WIRE IS QUIET — NEXT DISPATCH SOON';
+      return;
+    }
+    var items = headlines.map(function (h, i) {
+      var label = (h.source ? esc(h.source).toUpperCase() : "WIRE") + (h.when ? " · " + esc(fmtTime(h.when)) : "") + " — " + esc(h.title);
+      return '<a href="' + esc(h.link || "#") + '" target="_blank" rel="noopener"' + (i === 0 ? ' class="fresh"' : "") + ">" + label + "</a>";
+    });
+    var once = '<span class="lbl">INTEL WIRE — EYES ONLY</span>&nbsp;&nbsp;' + items.join('&nbsp;&nbsp;<span style="color:var(--cyan)">///</span>&nbsp;&nbsp;') + "&nbsp;&nbsp;";
+    track.innerHTML = once + once; // duplicated for the seamless loop
+  }
+
+  function renderScreen(d) {
+    var list = d.newsVideos || [];
+    var frame = $("screenFrame");
+    if (!list.length) {
+      frame.hidden = true; frame.removeAttribute("src");
+      $("screenBug").textContent = "GLOBAL INTEL — STANDING BY";
+      $("screenTitle").textContent = "The wire is quiet — the next dispatch takes the screen on the half hour.";
+      $("screenMeta").textContent = "";
+    } else {
+      var slot = (typeof d.rotationSlot === "number" && isFinite(d.rotationSlot))
+        ? d.rotationSlot
+        : Math.floor(Date.now() / 1800000);
+      var f = list[slot % list.length];
+      var src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(f.id) + "?rel=0";
+      if (frame.getAttribute("src") !== src) frame.src = src;
+      frame.hidden = false;
+      $("screenBug").textContent = "GLOBAL INTEL — " + String(f.source || "WIRE").toUpperCase();
+      $("screenTitle").textContent = f.title || "";
+      $("screenMeta").textContent = (f.source || "") + (f.published ? " · " + fmtWhen(f.published) : "");
+    }
+    // Roll to the next video on the half-hour boundary.
+    if (screenTimer) clearTimeout(screenTimer);
+    var ms = 1800000 - (Date.now() % 1800000) + 5000;
+    screenTimer = setTimeout(loadRoom, ms);
+  }
+
+  function renderVideos(videos) {
+    var box = $("vidList");
+    if (!videos || !videos.length) {
+      box.innerHTML = '<p class="dim" style="padding:12px 0">No founder videos stacked yet — the first private drop lands here.</p>';
+      return;
+    }
+    box.innerHTML = videos.map(function (v) {
+      var inner = "<div><b>" + esc(v.title) + "</b>" + (v.note ? '<div class="dim" style="font-size:13.5px">' + esc(v.note) + "</div>" : "") + "</div>";
+      if (v.id) {
+        return '<div class="pack">' + inner + '<a class="btn ghost small" href="https://www.youtube-nocookie.com/embed/' + encodeURIComponent(v.id) + '?rel=0" target="_blank" rel="noopener">Watch</a></div>';
+      }
+      return '<div class="pack">' + inner + (v.url ? '<a class="btn ghost small" href="' + esc(v.url) + '" target="_blank" rel="noopener">Visit →</a>' : "") + "</div>";
+    }).join("");
+  }
+
+  function renderDrops(drops) {
+    var box = $("dropsList");
+    if (!drops || !drops.length) { box.innerHTML = '<p class="dim">No releases yet — the first drop lands here.</p>'; return; }
+    box.innerHTML = drops.map(function (d) {
+      return '<div class="board-post"><b>' + esc(d.title) + "</b>" +
+        ' <span class="dim" style="font-family:var(--mono);font-size:11px;letter-spacing:.14em">· ' + esc(d.category || "DROP").toUpperCase() + (d.date ? " · " + esc(d.date) : "") + "</span>" +
+        (d.body ? "<p>" + esc(d.body) + "</p>" : "") +
+        (d.url ? '<p style="margin-top:4px"><a href="' + esc(d.url) + '" target="_blank" rel="noopener">Open →</a></p>' : "") + "</div>";
+    }).join("");
+  }
+
+  function renderPosts(posts) {
+    var box = $("postsList");
+    if (!posts || !posts.length) { box.innerHTML = '<p class="dim">The floor is open. First founder post takes the room.</p>'; return; }
+    box.innerHTML = posts.map(function (p) {
+      return '<div class="board-post"><b>' + esc(p.username || "Founder") + "</b>" +
+        (p.ts ? ' <span class="dim" style="font-family:var(--mono);font-size:11px">' + esc(fmtTime(p.ts)) + "</span>" : "") +
+        "<p>" + esc(p.body) + "</p></div>";
+    }).join("");
+  }
+
+  function renderBoard(board) {
+    var box = $("roomBoard");
+    if (!board || !board.length) { box.innerHTML = '<p class="dim">No dives logged yet. The first founder to feed their shark takes the top seat.</p>'; return; }
+    box.innerHTML = board.slice(0, 10).map(function (row, i) {
+      return '<div class="lb-row"><span><b>#' + (i + 1) + " " + esc(row.username || "Shark") + '</b> · ' + esc(row.rankName || "") +
+        '</span><span>' + Number(row.careerDays || 0) + " days · streak " + Number(row.streak || 0) + "</span></div>";
+    }).join("");
+  }
+
+  function loadRoom() {
+    return PortalAPI.call("getRoomData", pass).then(function (d) {
+      if (!d || !d.ok) { showGate((d && d.error) || "This room opens from the Members Portal."); return; }
+      $("roomGate").hidden = true;
+      $("roomMain").hidden = false;
+      var chip = $("mChip");
+      var who = d.name || d.username || "Founder";
+      chip.textContent = who + (d.seat ? " · SEAT #" + d.seat + " OF 100" : " · FOUNDING");
+      chip.hidden = false;
+      renderWire(d.headlines);
+      renderScreen(d);
+      renderVideos(d.videos);
+      renderDrops(d.drops);
+      renderPosts(d.posts);
+      renderBoard(d.board);
+    }).catch(function (err) {
+      showGate(err.message || "This room opens from the Members Portal.");
+    });
+  }
+
+  /* post to the floor */
+  $("postForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var text = $("postText").value.trim();
+    var err = $("postErr");
+    if (!text) { err.textContent = "Write something first."; return; }
+    var btn = $("postBtn");
+    btn.disabled = true; err.textContent = "";
+    PortalAPI.call("postToBoard", pass, text).then(function (r) {
+      btn.disabled = false;
+      if (!r || !r.ok) { err.textContent = (r && r.error) || "That post did not land. Try again."; return; }
+      $("postText").value = "";
+      PortalAPI.call("getBoard", pass).then(function (b) {
+        if (b && b.ok) renderPosts(b.posts);
+      }).catch(function () {});
+    }).catch(function (e2) {
+      btn.disabled = false;
+      err.textContent = e2.message || "That post did not land. Try again.";
+    });
+  });
+
+  /* auto-refresh every 3 minutes — never while a post is being written */
+  setInterval(function () {
+    var t = $("postText");
+    if (document.activeElement === t || (t && t.value.trim())) return;
+    loadRoom();
+  }, 180000);
+
+  loadRoom();
+})();
+</script>
+</body>
+</html>
