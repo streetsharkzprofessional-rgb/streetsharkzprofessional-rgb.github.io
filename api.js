@@ -22,7 +22,7 @@
  */
 (function () {
   "use strict";
-  var ENDPOINT = ""; // Fin sets the deployed web-app /exec URL at wiring time.
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbyAiXXXiwR7FU2dlsUi0D_e3-vZJEzvI5rw-MXTEO0ls8LkM_TKJmv_hDoYhywEmtjDRA/exec"; // Route A engine (same portal deployment), wired 2026-11-18.
   var seq = 0;
 
   function call(fn) {

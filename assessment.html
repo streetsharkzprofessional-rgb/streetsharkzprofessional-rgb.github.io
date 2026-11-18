@@ -351,16 +351,21 @@
     };
 
     var confirmLine = document.getElementById("confirm-line");
-    function confirm() {
-      if (confirmLine) confirmLine.textContent = "Your full report is on its way by the delivery you chose.";
+    function confirm(res) {
+      if (!confirmLine) return;
+      if (res && res.ok) {
+        confirmLine.textContent = "Your full report is on its way by the delivery you chose.";
+      } else {
+        confirmLine.textContent = "Your full report is on this page — that map above is yours. Screenshot it, and start with the guided path below.";
+      }
     }
     var btn = document.getElementById("send-report");
-    if (btn) { btn.disabled = true; btn.textContent = "Report Sent"; }
+    if (btn) { btn.disabled = true; btn.textContent = "Report Ready"; }
 
     if (window.PortalAPI && typeof window.PortalAPI.call === "function") {
-      window.PortalAPI.call("submitAssessment", payload).then(confirm, confirm);
+      window.PortalAPI.call("submitAssessment", payload).then(confirm, function () { confirm(null); });
     } else {
-      confirm();
+      confirm(null);
     }
   });
 })();
