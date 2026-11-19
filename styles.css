@@ -431,8 +431,17 @@ h1, h2, .display {
   box-shadow: inset 0 1px 0 rgba(232, 200, 90, 0.12);
   padding: 1rem 1rem 1.1rem;
 }
-.pillar header { display: flex; justify-content: space-between; gap: 0.5rem; align-items: baseline; }
-.pillar h3, .door h3, .pack h3, .resource h3 { font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.04em; font-weight: 600; }
+.pillar { min-width: 0; }
+.pillar header { display: flex; justify-content: space-between; gap: 0.5rem; align-items: baseline; min-width: 0; }
+.pillar h2, .pillar h3, .door h3, .pack h3, .resource h3 { font-family: var(--display); font-size: 1.15rem; letter-spacing: 0.03em; font-weight: 600; }
+.pillar h2 {
+  margin: 0;
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.2;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
 .idx { font-family: var(--mono); color: var(--cyan); font-size: 0.72rem; letter-spacing: 0.12em; }
 .pillar p { margin-top: 0.7rem; color: var(--silver); font-size: 0.95rem; }
 .pillar-foot { margin-top: 1rem !important; font-family: var(--mono); font-size: 0.66rem !important; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-2) !important; }
@@ -550,6 +559,12 @@ h1, h2, .display {
   color: var(--silver);
 }
 .book-grid { grid-template-columns: minmax(300px, 560px) 1fr; }
+@media (min-width: 801px) {
+  .page-home #book .book-grid {
+    grid-template-columns: minmax(220px, 300px) 1fr;
+    align-items: center;
+  }
+}
 .book-shot { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .book-shot picture { flex: 1 1 0; min-width: 0; }
 .book-shot figcaption { flex: 1 1 100%; }
@@ -665,6 +680,8 @@ blockquote {
   letter-spacing: 0.04em;
 }
 .legal h2 { font-size: 1.25rem; max-width: none; margin: 1.5rem 0 0.45rem; }
+.legal a, .legal p { overflow-wrap: anywhere; }
+.legal .clarity { margin-top: 1.4rem; color: var(--silver); font-size: 0.92rem; }
 fieldset.q legend { float: left; width: 100%; margin: 0 0 0.35rem; padding: 0; }
 .page-sub h1 { font-size: clamp(2rem, 4vw, 3.2rem); text-transform: uppercase; margin: 0.4rem 0 1rem; }
 
@@ -1099,18 +1116,35 @@ textarea { min-height: 120px; resize: vertical; }
 }
 .lead-engine {
   display: grid;
-  grid-template-columns: minmax(160px, 210px) minmax(280px, 420px) minmax(240px, 1fr);
-  grid-template-areas: "clip engineer packs";
-  gap: 1.1rem;
+  grid-template-columns: minmax(150px, 200px) minmax(300px, 1.35fr) minmax(220px, 0.9fr);
+  grid-template-areas:
+    "head head head"
+    "clip engineer packs";
+  gap: 1rem 1.1rem;
   align-items: start;
   margin-top: 1.5rem;
 }
-.lead-engine .engineer-card { grid-area: engineer; margin: 0; }
+.lead-engine-head { grid-area: head; text-align: center; }
+.lead-engine-head .eyebrow { justify-content: center; }
+.lead-engine-head h2 {
+  max-width: none;
+  margin: 0.25rem 0 0.35rem;
+  text-align: center;
+}
+.lead-engine .engineer-card { grid-area: engineer; margin: 0; justify-self: center; width: 100%; }
 .lead-engine .clip-card { grid-area: clip; }
 .lead-engine .packs { grid-area: packs; margin-top: 0; grid-template-columns: 1fr; }
+.lead-engine .pack h2 { font-size: clamp(1.35rem, 2vw, 1.85rem); max-width: none; margin: 0.25rem 0 0.35rem; }
 .engineer-card {
   border-color: rgba(232, 200, 90, 0.95);
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 1px rgba(232, 200, 90, 0.28), 0 22px 56px rgba(0, 0, 0, 0.45);
+}
+.engineer-card figcaption { text-align: center; color: var(--gold-2); }
+@media (min-width: 1200px) {
+  .lead-engine {
+    width: min(1240px, calc(100vw - 3rem));
+    margin-left: calc((100% - min(1240px, calc(100vw - 3rem))) / 2);
+  }
 }
 .crew-captain-clip { max-width: 300px; margin-top: 1.5rem; }
 
@@ -1141,13 +1175,16 @@ textarea { min-height: 120px; resize: vertical; }
 @media (max-width: 1000px) {
   .episode-row { grid-template-columns: 1fr 1fr; }
   .lead-engine {
+    width: auto;
+    margin-left: 0;
     grid-template-columns: 1fr;
     grid-template-areas:
+      "head"
       "engineer"
       "clip"
       "packs";
   }
-  .lead-engine .engineer-card { max-width: 460px; }
+  .lead-engine .engineer-card { max-width: 460px; margin-inline: auto; }
   .lead-engine .clip-card { max-width: 300px; }
 }
 @media (max-width: 560px) {
