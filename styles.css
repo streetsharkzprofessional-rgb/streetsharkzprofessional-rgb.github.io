@@ -1027,5 +1027,138 @@ textarea { min-height: 120px; resize: vertical; }
   a { color: #111; }
 }
 
-.cards-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; align-items: start; }
+.cards-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; align-items: start; }
 @media (max-width: 900px) { .cards-row { grid-template-columns: 1fr; max-width: 480px; } }
+.result-note { margin-top: 0.4rem; color: var(--silver); font-size: 0.9rem; max-width: 62ch; }
+.shot .result-note { margin: 0; padding: 0 0.9rem 0.85rem; max-width: none; }
+
+/* Captain clips — self-hosted, click to play. The hero loop is decoration. */
+.arc-hero {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: calc(100svh - 8.2rem);
+  padding: 3.5rem 0 4rem;
+  overflow: hidden;
+}
+.arc-hero-media,
+.arc-hero-shade { position: absolute; inset: 0; }
+.arc-hero-media {
+  z-index: 0;
+  background: #050b14 url("assets/video/anchor-hero-poster.jpg") center / cover no-repeat;
+}
+.arc-hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.arc-hero-shade {
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(5, 11, 20, 0.5) 0%, rgba(5, 11, 20, 0.68) 46%, rgba(5, 11, 20, 0.84) 100%);
+}
+.arc-hero-copy { position: relative; z-index: 2; }
+.arc-hero-copy h1,
+.arc-hero-copy .prose,
+.arc-hero-copy .cta-row { text-shadow: 0 1px 14px rgba(0, 0, 0, 0.55); }
+
+.episode-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1.4rem;
+  align-items: start;
+}
+.clip-card {
+  margin: 0;
+  border: 1px solid rgba(232, 200, 90, 0.78);
+  background: #050b14;
+  overflow: hidden;
+}
+.clip-card video {
+  display: block;
+  width: 100%;
+  height: auto;
+  background: #050b14;
+}
+.clip-card figcaption { padding: 0.75rem 0.85rem 0.95rem; }
+.clip-card h3 {
+  font-family: var(--display);
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+.clip-card p {
+  margin-top: 0.45rem;
+  color: var(--silver);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+.lead-engine {
+  display: grid;
+  grid-template-columns: minmax(160px, 210px) minmax(280px, 420px) minmax(240px, 1fr);
+  grid-template-areas: "clip engineer packs";
+  gap: 1.1rem;
+  align-items: start;
+  margin-top: 1.5rem;
+}
+.lead-engine .engineer-card { grid-area: engineer; margin: 0; }
+.lead-engine .clip-card { grid-area: clip; }
+.lead-engine .packs { grid-area: packs; margin-top: 0; grid-template-columns: 1fr; }
+.engineer-card {
+  border-color: rgba(232, 200, 90, 0.95);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.4);
+}
+.crew-captain-clip { max-width: 300px; margin-top: 1.5rem; }
+
+.break-photo {
+  margin: 0;
+  background: #050b14;
+  border-block: 1px solid rgba(232, 200, 90, 0.45);
+}
+.break-photo img {
+  display: block;
+  width: 100%;
+  height: min(72vh, 760px);
+  object-fit: cover;
+  object-position: center 62%;
+}
+.break-photo figcaption {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 0.7rem 0 0.85rem;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--silver);
+}
+.break-photo + .section { padding-top: 3.2rem; }
+
+@media (max-width: 1000px) {
+  .episode-row { grid-template-columns: 1fr 1fr; }
+  .lead-engine {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "engineer"
+      "clip"
+      "packs";
+  }
+  .lead-engine .engineer-card { max-width: 460px; }
+  .lead-engine .clip-card { max-width: 300px; }
+}
+@media (max-width: 560px) {
+  .episode-row { grid-template-columns: 1fr; }
+  .episode-row .clip-card,
+  .lead-engine .clip-card,
+  .lead-engine .engineer-card,
+  .crew-captain-clip { max-width: 420px; }
+  .arc-hero { min-height: 0; padding: 2.6rem 0 2.8rem; }
+  .break-photo img { height: 78vh; object-position: center 70%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arc-hero-video { display: none; }
+}
