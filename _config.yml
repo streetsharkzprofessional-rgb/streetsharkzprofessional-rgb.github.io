@@ -1,0 +1,5 @@
+# A custom include list replaces Jekyll's default, so .htaccess stays listed.
+# .well-known is named so GitHub Pages publishes /.well-known/security.txt.
+include:
+  - ".htaccess"
+  - ".well-known"
