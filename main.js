@@ -764,7 +764,60 @@ function initAssessment() {
       partner.hidden = false;
       partner.textContent = 'Introductions open with the founding class.';
     } else partner.hidden = true;
-    document.getElementById('map-offer').textContent = 'The $30 bundle is Sharked Up: The Art of Finesse plus premium beta access. The $50 tier is one of only 100 Founding Member seats, with the private course modules and frameworks and the glow-in-the-dark bracelet.';
+    var doorHost = document.getElementById('map-door');
+    var offer = document.getElementById('map-offer');
+    var door;
+    if (low === 4) {
+      door = {
+        href: 'sharkonomicz.html',
+        label: 'Open Sharkonomicz',
+        note: 'Economics is the low pillar. Sharkonomicz is the business door.',
+        external: false
+      };
+    } else if (total <= 10) {
+      door = {
+        href: 'https://buy.stripe.com/00waEYfsK99P70466s7kc0l',
+        label: 'Start the beta — $10',
+        note: 'The map is light. The $10 beta is the 90-day path.',
+        external: true
+      };
+    } else if (total <= 20) {
+      door = {
+        href: 'https://buy.stripe.com/4gM14o4O64Tz5W09iE7kc0i',
+        label: 'Get the bundle — $30',
+        note: 'The book plus the premium beta. Read it, then run it.',
+        external: true
+      };
+    } else {
+      door = {
+        href: 'https://buy.stripe.com/5kQfZi94m85L98camI7kc0k',
+        label: 'Founding seat — $50',
+        note: 'One of only 100 seats, with the bracelet and the Back Door.',
+        external: true
+      };
+    }
+    if (offer) offer.textContent = door.note;
+    if (doorHost) {
+      doorHost.textContent = '';
+      var link = el('a', 'btn btn-solid', door.label);
+      link.href = door.href;
+      if (door.external) {
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.setAttribute('data-pay', '');
+        link.appendChild(el('span', 'sr-only', ' (opens in a new tab)'));
+      }
+      doorHost.appendChild(link);
+      var fine = el('p', 'fine');
+      var terms = el('a', null, 'Terms and license');
+      terms.href = 'terms.html';
+      var refunds = el('a', null, 'Refunds');
+      refunds.href = 'refund.html';
+      fine.appendChild(terms);
+      fine.appendChild(document.createTextNode(' · '));
+      fine.appendChild(refunds);
+      doorHost.appendChild(fine);
+    }
     var payload = {
       name: document.getElementById('report-name').value.trim(),
       email: email,
