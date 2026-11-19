@@ -63,11 +63,13 @@
           </div>
           <div class="field">
             <label for="crew-industry">Industry</label>
-            <input id="crew-industry" name="industry" type="text" autocomplete="organization-title" maxlength="80" required>
+            <input id="crew-industry" name="industry" type="text" autocomplete="organization-title" maxlength="60" required aria-describedby="crew-industry-hint">
+            <p class="hint" id="crew-industry-hint">Up to 60 characters.</p>
           </div>
           <div class="field">
             <label for="crew-purpose">Major life purpose or goal</label>
-            <input id="crew-purpose" name="purpose" type="text" autocomplete="off" maxlength="160" required>
+            <input id="crew-purpose" name="purpose" type="text" autocomplete="off" maxlength="140" required aria-describedby="crew-purpose-hint">
+            <p class="hint" id="crew-purpose-hint">One line, up to 140 characters.</p>
           </div>
           <div class="field">
             <label for="crew-email">Email</label>
@@ -255,19 +257,19 @@
     var RIGGING = "The deck is getting its final rigging, try again shortly";
     var NEUTRAL = "If that email is on the crew roll, a code is on its way";
     var DAY = 24 * 60 * 60 * 1000;
-    var CAP = { name: 80, alias: 24, industry: 80, purpose: 160, email: 254, phone: 32 };
+    var CAP = { name: 80, alias: 24, industry: 60, purpose: 140, email: 254, phone: 32 };
     var SIGNUP_ERRORS = {
       alias_taken: "That alias is already on the roll. Pick another.",
       invalid: "Check the fields and try again.",
-      rate_limited: "Too many tries. Give it a minute and come back."
+      rate_limited: "Too many tries. Give it a minute and come back.",
+      terms_required: "Confirm you're 18+ and agree to the Terms and Privacy Policy."
     };
     var VERIFY_ERRORS = {
-      alias_taken: "That alias is already on the roll. Pick another.",
-      invalid: "That code was not accepted.",
-      rate_limited: "Too many tries. Give it a minute and come back.",
-      expired: "That code was not accepted.",
       bad_code: "That code was not accepted.",
-      mismatch: "That code was not accepted."
+      not_found: "That code was not accepted.",
+      expired: "That code has expired. Request a fresh one.",
+      no_code: "That code has expired. Request a fresh one.",
+      too_many_tries: "Too many tries. Request a fresh code."
     };
     var pendingEmail = "";
     var pendingAlias = "";
@@ -374,6 +376,13 @@
     function showCodeStep() {
       if (codeStep) codeStep.hidden = false;
       if (codeInput) codeInput.focus();
+    }
+    function revealResend() {
+      if (codeStep) codeStep.hidden = false;
+      if (resendCodeBtn) {
+        resendCodeBtn.hidden = false;
+        resendCodeBtn.focus();
+      }
     }
     function noteStoredPass() {
       var row = document.getElementById("crew-leave-row");
@@ -605,7 +614,7 @@
         quietFail(RIGGING);
         return;
       }
-      window.PortalAPI.call("getCrewWire", { pass: record.pass }).then(function (data) {
+      window.PortalAPI.call("getCrewWire", record.pass).then(function (data) {
         if (data && data.needSignup) {
           if (rollTimer) { clearTimeout(rollTimer); rollTimer = 0; }
           clearCrew();
@@ -658,8 +667,10 @@
       var phone = clean(phoneInput && phoneInput.value);
       if (!name || name.length > CAP.name) return fail(nameInput, "Add your name.");
       if (alias.length < 2 || alias.length > CAP.alias) return fail(aliasInput, "The alias needs 2 to 24 characters.");
-      if (!industry || industry.length > CAP.industry) return fail(industryInput, "Add your industry.");
-      if (!purpose || purpose.length > CAP.purpose) return fail(purposeInput, "Add the purpose or goal on one line.");
+      if (!industry) return fail(industryInput, "Add your industry.");
+      if (industry.length > CAP.industry) return fail(industryInput, "Keep the industry to 60 characters.");
+      if (!purpose) return fail(purposeInput, "Add the purpose or goal on one line.");
+      if (purpose.length > CAP.purpose) return fail(purposeInput, "Keep the purpose to 140 characters.");
       if (!emailOk(email) || email.length > CAP.email) return fail(emailInput, "Enter a real email so the code has somewhere to go.");
       if (phone.length > CAP.phone) return fail(phoneInput, "Keep the line shorter.");
       if (!agree || !agree.checked) return fail(agree, "Check the box to confirm you are 18 or older and agree to the Terms and Privacy Policy.");
@@ -692,7 +703,9 @@
         return;
       }
       if (!result.ok || typeof result.pass !== "string" || !result.pass) {
-        say(VERIFY_ERRORS[result.error] || "That code was not accepted.");
+        var reason = result && result.error;
+        if (reason === "expired" || reason === "no_code") revealResend();
+        say(VERIFY_ERRORS[reason] || "That code was not accepted.");
         return;
       }
       var alias = plain(result.alias) || pendingAlias || "crew";
