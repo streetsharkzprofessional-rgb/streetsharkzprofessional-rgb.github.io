@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var raw = localStorage.getItem("ss_crew_pass");
+      if (!raw) return;
+      var data = JSON.parse(raw);
+      var exp = data && data.expiresAt ? new Date(data.expiresAt).getTime() : 0;
+      if (data && data.pass && exp > Date.now()) document.documentElement.classList.add("crew-hold");
+    } catch (ignore) {}
+  })();
+  </script>
+  <title>The Crew Deck — Street Sharkz Professional</title>
+  <meta name="description" content="The Crew Deck — the free Street Sharkz community deck. The crew wire, the big screen, daily work across the five pillars, and the craft of narrative control.">
+  <link rel="canonical" href="https://www.streetsharkz.com/crew">
+  <meta property="og:site_name" content="Street Sharkz Professional">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="The Crew Deck — Street Sharkz Professional">
+  <meta property="og:description" content="The Crew Deck — the free Street Sharkz community deck. The crew wire, the big screen, daily work across the five pillars, and the craft of narrative control.">
+  <meta property="og:url" content="https://www.streetsharkz.com/crew">
+  <meta property="og:image" content="https://www.streetsharkz.com/assets/img/og/room.jpg">
+  <meta property="og:image:alt" content="Street Sharkz Professional">
+  <meta name="theme-color" content="#050b14">
+  <link rel="icon" href="assets/img/ss-hex-logo-official.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .crew-hold #crew-join { display: none; }
+    #crew-form { display: none; }
+    body.crew-open #crew-form { display: block; }
+    body.crew-open #crew-join-cta { display: none; }
+    body.page-room [hidden] { display: none !important; }
+    .crew-join.section { position: relative; padding: 1.35rem 0 0.55rem; overflow-x: clip; }
+    .crew-hp {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
+    .crew-join h2 { max-width: none; }
+    .crew-join .choice { align-items: flex-start; height: auto; }
+    .crew-join .choice input { margin-top: 0.35rem; }
+    .crew-join .choice span { flex: 1; min-width: 0; line-height: 1.45; }
+    .crew-join .hint { margin-top: 0.35rem; }
+    .crew-join .cta-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+    .wire.is-locked { position: static; }
+    .page-room .room-actions { flex-wrap: wrap; }
+    #crew-greet { color: var(--gold-2); }
+  </style>
+</head>
+<body class="page-room" data-page="crew">
+  <a class="skip" href="#main">Skip to the deck</a>
+  <section class="section crew-join" id="crew-join">
+    <div class="narrow">
+      <p class="eyebrow">The crew roll</p>
+      <h2>Join the crew</h2>
+      <p class="lede-left">We keep the wire and the screen dark until you are on the roll. The daily work below stays on the deck for everyone.</p>
+      <div id="crew-join-cta">
+        <p class="cta-row">
+          <button class="btn btn-solid" type="button" id="crew-open-form">Join the crew</button>
+          <a class="text-link" href="#crew-join" id="crew-open-already">Already crew?</a>
+        </p>
+      </div>
+      <form id="crew-form" class="gate" novalidate>
+        <div id="crew-join-fields">
+          <div class="field">
+            <label for="crew-name">Name</label>
+            <input id="crew-name" name="name" type="text" autocomplete="name" maxlength="80" required>
+          </div>
+          <div class="field">
+            <label for="crew-alias">Crew alias</label>
+            <input id="crew-alias" name="alias" type="text" autocomplete="nickname" minlength="2" maxlength="24" spellcheck="false" required aria-describedby="crew-alias-hint">
+            <p class="hint" id="crew-alias-hint">2 to 24 characters.</p>
+          </div>
+          <div class="field">
+            <label for="crew-industry">Industry</label>
+            <input id="crew-industry" name="industry" type="text" autocomplete="organization-title" maxlength="60" required aria-describedby="crew-industry-hint">
+            <p class="hint" id="crew-industry-hint">Up to 60 characters.</p>
+          </div>
+          <div class="field">
+            <label for="crew-purpose">Major life purpose or goal</label>
+            <input id="crew-purpose" name="purpose" type="text" autocomplete="off" maxlength="140" required aria-describedby="crew-purpose-hint">
+            <p class="hint" id="crew-purpose-hint">One line, up to 140 characters.</p>
+          </div>
+          <div class="field">
+            <label for="crew-email">Email</label>
+            <input id="crew-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+          </div>
+          <div class="field">
+            <label for="crew-phone">Business or professional line — optional</label>
+            <input id="crew-phone" name="phone" type="tel" autocomplete="tel" maxlength="32" aria-describedby="crew-phone-hint">
+            <p class="hint" id="crew-phone-hint">For crew opportunities and introductions only. Never sold, never used for marketing blasts.</p>
+          </div>
+          <label class="choice">
+            <input id="crew-agree" name="agree18Terms" type="checkbox" value="yes" required>
+            <span>I'm 18 or older and agree to the <a href="terms.html">Terms</a> and <a href="privacy.html">Privacy Policy</a></span>
+          </label>
+          <label class="choice">
+            <input id="crew-texts" name="textOptIn" type="checkbox" value="yes">
+            <span>Text me at this line about crew opportunities and introductions. Optional.</span>
+          </label>
+          <input id="crew-hp" name="hp" class="crew-hp" type="text" aria-hidden="true" tabindex="-1" autocomplete="off" maxlength="200">
+          <p class="cta-row">
+            <button class="btn btn-solid" type="submit" id="crew-join-btn">Join the crew.</button>
+          </p>
+          <p><a class="text-link" href="#crew-resend-step" id="crew-already">Already crew?</a></p>
+        </div>
+        <div id="crew-resend-step" hidden>
+          <div class="field">
+            <label for="crew-resend-email">Email</label>
+            <input id="crew-resend-email" name="resendEmail" type="email" autocomplete="email" maxlength="254">
+          </div>
+          <p class="cta-row">
+            <button class="btn btn-solid" type="button" id="crew-resend-send">Email me a code</button>
+          </p>
+          <p><button class="text-link" type="button" id="crew-back-join">Join instead</button></p>
+        </div>
+        <div id="crew-code-step" hidden>
+          <div class="field">
+            <label for="crew-code">6-digit code</label>
+            <input id="crew-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" spellcheck="false">
+          </div>
+          <p class="cta-row">
+            <button class="btn btn-solid" type="button" id="crew-confirm">Confirm code</button>
+            <button class="btn btn-ghost" type="button" id="crew-resend-code">Resend code</button>
+          </p>
+        </div>
+        <p id="crew-status" class="status" role="status" aria-live="polite"></p>
+        <p id="crew-leave-row" hidden><button class="text-link" type="button" id="crew-leave-locked">Leave the deck</button></p>
+      </form>
+    </div>
+  </section>
+  <div class="wire is-locked" id="crew-wire">
+    <p class="wire-label">THE CREW WIRE — LOCKED</p>
+    <div class="wire-viewport">
+      <div class="wire-track" id="crew-wire-track">
+        <div class="wire-row">
+          <p class="wire-item wire-static"><span class="redact" aria-hidden="true"></span> The wire stays dark until you join the crew.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <main id="main">
+    <div class="room-bar">
+      <div>
+        <p class="eyebrow">Street Sharkz Professional · The free community deck</p>
+        <h1>The Crew Deck</h1>
+        <p class="lede-left">The wire and the screen open once you are crew. The daily work stays on the deck.</p>
+        <p class="lede-left" id="crew-greet" hidden></p>
+      </div>
+      <div class="room-actions">
+        <button class="btn btn-ghost" type="button" id="crew-leave" hidden>Leave the deck</button>
+        <a class="btn btn-ghost" href="assessment.html">Free Assessment</a>
+        <a class="btn btn-solid" href="portal.html">Members Portal</a>
+      </div>
+    </div>
+
+    <section class="section" id="screen-section">
+      <div class="wrap">
+        <p class="eyebrow"><span>01</span> The wire &amp; the big screen</p>
+        <h2>Global intel, rolling</h2>
+        <p class="lede-left">The deck’s own wire and screen — wellness, mindfulness, and the craft of the work, with a light line of brand and business running through it. We open it for crew on the roll.</p>
+        <div id="crew-screen-frame">
+          <div class="broadcast-link">
+            <div class="broadcast-art" aria-hidden="true"></div>
+            <span class="bug">CREW SCREEN — DARK</span>
+          </div>
+        </div>
+        <h3 class="screen-title" id="crew-screen-title">The screen is dark</h3>
+        <p class="lede-left" id="crew-screen-note">Join the crew and the screen rolls with you. Until then it stays dark.</p>
+        <p class="roll" id="crew-roll-line" hidden>The screen rolls on the half hour. Next roll <time id="crew-next-roll">—</time>.</p>
+      </div>
+    </section>
+
+    <section class="section" id="pillars-section">
+      <div class="wrap">
+        <p class="eyebrow"><span>02</span> Today's work</p>
+        <h2>Five pillars, every day</h2>
+        <p class="lede-left">Peak Performance is a daily practice, not an event. One honest rep per pillar, logged — that is the whole secret, and it compounds.</p>
+        <div class="pillars">
+          <article class="pillar">
+            <header><h3>Hydration</h3><span class="idx">01</span></header>
+            <p>Water where you work, logged when you drink it. The dive counts what the day can prove.</p>
+            <p class="pillar-foot">Pillar · 01 / 05</p>
+          </article>
+          <article class="pillar">
+            <header><h3>Nutrition</h3><span class="idx">02</span></header>
+            <p>Decide the fuel before the day decides for you. Steady beats perfect, every time.</p>
+            <p class="pillar-foot">Pillar · 02 / 05</p>
+          </article>
+          <article class="pillar">
+            <header><h3>Fitness</h3><span class="idx">03</span></header>
+            <p>Twenty honest minutes, logged. The streak is the fin — keep it above water.</p>
+            <p class="pillar-foot">Pillar · 03 / 05</p>
+          </article>
+          <article class="pillar">
+            <header><h3>Mind</h3><span class="idx">04</span></header>
+            <p>Anchor first. Name the story you are telling yourself before you answer the room.</p>
+            <p class="pillar-foot">Pillar · 04 / 05</p>
+          </article>
+          <article class="pillar">
+            <header><h3>Economics</h3><span class="idx">05</span></header>
+            <p>One revenue-producing action before noon. Log it. Small, daily, compounding.</p>
+            <p class="pillar-foot">Pillar · 05 / 05</p>
+          </article>
+        </div>
+        <p class="cta-row"><a class="btn btn-solid" href="peak-performance.html">Get the app — start your 90 days</a></p>
+      </div>
+    </section>
+
+    <section class="section" id="narrative-section">
+      <div class="wrap">
+        <p class="eyebrow"><span>03</span> The craft</p>
+        <h2>Narrative control — inner and outer</h2>
+        <p class="lede-left">Every crew member is read twice: once by the story running in their own head, and once by the story the room reads from them. The Deck exists to train both.</p>
+        <div class="book-grid">
+          <div class="prose stack">
+            <h3>The inner narrative</h3>
+            <p>The first story is the one you tell yourself about who you are and what your work means. Run the loop on it: observe, think, act, log, improve, repeat — finesse in practication. A shark stays sharked up by keeping that story honest, fed by receipts, not wishes.</p>
+          </div>
+          <div class="prose stack">
+            <h3>The outer narrative</h3>
+            <p>The room reads your story before you speak — how you arrive, how you present, whether your word and your work match. Perceived trust and perceived value are built in small proofs, stacked daily: show up when you said, dress like the word you want believed, and let the log speak.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="standard-section">
+      <div class="wrap">
+        <p class="eyebrow"><span>04</span> The crew standard</p>
+        <h2>How the crew carries the brand</h2>
+        <div class="prose stack">
+          <p>The crew's image is a shared asset — every member's presentation raises or lowers the value of the name for everyone else. The standard is simple:</p>
+          <p><strong>Be on time.</strong> The word is the bond. <strong>Keep receipts.</strong> Log the work, don't narrate it. <strong>Present clean.</strong> Dress and speak like the professional the story says you are. <strong>Everyone eats.</strong> Credit shared is value multiplied — equity over gold. <strong>Stay lawful.</strong> Lawful piracy only: we create and acquire, we never take.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="line-section">
+      <div class="wrap">
+        <p class="eyebrow"><span>05</span> The line</p>
+        <h2>What the Deck is — and is not</h2>
+        <div class="prose stack">
+          <p>The Crew Deck is the free community deck: the wire and the screen for people on the crew roll, and the daily pillar work and the craft of narrative control for anyone on this page. It carries no private learning modules, no member opportunities, and no advanced economic analysis — those live behind the Members Portal, and the deepest room, the Back Door, belongs to the 100 Founding Members.</p>
+          <p>Three ways aboard: take the free Assessment, get the app, or claim a seat. However you arrived — welcome to the crew. Stay Sharked Up.</p>
+        </div>
+        <p class="cta-row">
+          <a class="btn btn-solid" href="assessment.html">Take the Free Assessment</a>
+          <a class="btn btn-ghost" href="peak-performance.html">See the doors</a>
+        </p>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer site-footer-slim">
+    <div class="wrap">
+      <p>We are Street Sharkz Professional — helping you navigate financial waters with finesse.</p>
+      <p><a href="mailto:Office@StreetSharkz.com">Office@StreetSharkz.com</a> · <a href="tel:+18623100775">+1 862-310-0775</a></p>
+      <p><a href="privacy.html">Privacy</a> · <a href="terms.html">Terms and license</a> · <a href="refund.html">Refunds</a></p>
+      <p class="signoff">Stay sharked UP</p>
+    </div>
+  </footer>
+  <script src="api.js"></script>
+  <script src="main.js"></script>
+
+  <script>
+  (function () {
+    var KEY = "ss_crew_pass";
+    var RIGGING = "The deck is getting its final rigging, try again shortly";
+    var NEUTRAL = "If that email is on the crew roll, a code is on its way";
+    var DAY = 24 * 60 * 60 * 1000;
+    var CAP = { name: 80, alias: 24, industry: 60, purpose: 140, email: 254, phone: 32 };
+    var SIGNUP_ERRORS = {
+      alias_taken: "That alias is already on the roll. Pick another.",
+      invalid: "Check the fields and try again.",
+      rate_limited: "Too many tries. Give it a minute and come back.",
+      terms_required: "Confirm you're 18+ and agree to the Terms and Privacy Policy."
+    };
+    var VERIFY_ERRORS = {
+      bad_code: "That code was not accepted.",
+      not_found: "That code was not accepted.",
+      expired: "That code has expired. Request a fresh one.",
+      no_code: "That code has expired. Request a fresh one.",
+      too_many_tries: "Too many tries. Request a fresh code."
+    };
+    var pendingEmail = "";
+    var pendingAlias = "";
+    var busy = false;
+    var rollTimer = 0;
+
+    var form = document.getElementById("crew-form");
+    var joinFields = document.getElementById("crew-join-fields");
+    var resendStep = document.getElementById("crew-resend-step");
+    var codeStep = document.getElementById("crew-code-step");
+    var status = document.getElementById("crew-status");
+    var joinBtn = document.getElementById("crew-join-btn");
+    var codeInput = document.getElementById("crew-code");
+    var confirmBtn = document.getElementById("crew-confirm");
+    var resendCodeBtn = document.getElementById("crew-resend-code");
+    var resendSendBtn = document.getElementById("crew-resend-send");
+
+    function el(tag, cls, text) {
+      var n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (text != null) n.textContent = text;
+      return n;
+    }
+    function say(text) { if (status) status.textContent = text || ""; }
+    function clean(value) {
+      return String(value == null ? "" : value).replace(/[\u0000-\u001F\u007F]/g, "").replace(/^\s+|\s+$/g, "");
+    }
+    function emailOk(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+    function plain(value) {
+      if (typeof value === "string") return value;
+      if (typeof value === "number" || typeof value === "boolean") return String(value);
+      return "";
+    }
+    function mark(input, bad) {
+      if (!input) return;
+      if (bad) input.setAttribute("aria-invalid", "true");
+      else input.removeAttribute("aria-invalid");
+    }
+    function clearMarks() {
+      var nodes = form ? form.querySelectorAll("[aria-invalid]") : [];
+      Array.prototype.forEach.call(nodes, function (node) { node.removeAttribute("aria-invalid"); });
+    }
+    function expiryMs(value) {
+      if (value == null || value === "") return Date.now() + (30 * DAY);
+      if (typeof value === "number" && isFinite(value)) return value < 1e12 ? value * 1000 : value;
+      var parsed = new Date(value).getTime();
+      return isNaN(parsed) ? 0 : parsed;
+    }
+    function readCrew() {
+      try {
+        var raw = localStorage.getItem(KEY);
+        if (!raw) return null;
+        var data = JSON.parse(raw);
+        if (!data || typeof data.pass !== "string" || !data.pass) {
+          localStorage.removeItem(KEY);
+          return null;
+        }
+        var exp = data.expiresAt ? new Date(data.expiresAt).getTime() : 0;
+        if (!exp || isNaN(exp) || exp <= Date.now()) {
+          localStorage.removeItem(KEY);
+          return null;
+        }
+        return { pass: data.pass, alias: plain(data.alias), expiresAt: data.expiresAt };
+      } catch (ignore) {
+        try { localStorage.removeItem(KEY); } catch (again) {}
+        return null;
+      }
+    }
+    function saveCrew(pass, alias, expiresAt) {
+      var exp = expiryMs(expiresAt);
+      if (!exp || exp <= Date.now()) return false;
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          pass: String(pass),
+          alias: plain(alias),
+          expiresAt: new Date(exp).toISOString()
+        }));
+        return true;
+      } catch (ignore) { return false; }
+    }
+    function clearCrew() {
+      try { localStorage.removeItem(KEY); } catch (ignore) {}
+    }
+    function engineTrouble(result) {
+      if (result == null || typeof result !== "object") return true;
+      if (result.ok !== true && result.ok !== false) return true;
+      var err = String(result.error || "").toLowerCase();
+      if (!err) return false;
+      return /unknown action|unknown function|unknown_action|unknown_function|is not a function|not implemented|not deployed|script function|exception:|google|https?:|macros\//.test(err);
+    }
+    function setBusy(on) {
+      busy = on;
+      [joinBtn, confirmBtn, resendCodeBtn, resendSendBtn].forEach(function (btn) {
+        if (btn) btn.disabled = on;
+      });
+    }
+    function showJoinStep() {
+      if (joinFields) joinFields.hidden = false;
+      if (resendStep) resendStep.hidden = true;
+      if (codeStep) codeStep.hidden = true;
+    }
+    function showCodeStep() {
+      if (codeStep) codeStep.hidden = false;
+      if (codeInput) codeInput.focus();
+    }
+    function revealResend() {
+      if (codeStep) codeStep.hidden = false;
+      if (resendCodeBtn) {
+        resendCodeBtn.hidden = false;
+        resendCodeBtn.focus();
+      }
+    }
+    function noteStoredPass() {
+      var row = document.getElementById("crew-leave-row");
+      if (row) row.hidden = !readCrew();
+    }
+
+    function showLockedWire() {
+      var wire = document.getElementById("crew-wire");
+      var label = wire ? wire.querySelector(".wire-label") : null;
+      var track = document.getElementById("crew-wire-track");
+      if (wire) wire.classList.add("is-locked");
+      if (label) label.textContent = "THE CREW WIRE — LOCKED";
+      if (!track) return;
+      track.classList.remove("is-on");
+      track.textContent = "";
+      var row = el("div", "wire-row");
+      var item = el("p", "wire-item wire-static");
+      var bar = el("span", "redact");
+      bar.setAttribute("aria-hidden", "true");
+      item.appendChild(bar);
+      item.appendChild(document.createTextNode(" The wire stays dark until you join the crew."));
+      row.appendChild(item);
+      track.appendChild(row);
+    }
+    function showLockedScreen() {
+      var frame = document.getElementById("crew-screen-frame");
+      var title = document.getElementById("crew-screen-title");
+      var note = document.getElementById("crew-screen-note");
+      var roll = document.getElementById("crew-roll-line");
+      if (title) title.textContent = "The screen is dark";
+      if (note) {
+        note.hidden = false;
+        note.textContent = "Join the crew and the screen rolls with you. Until then it stays dark.";
+      }
+      if (roll) roll.hidden = true;
+      if (!frame) return;
+      frame.textContent = "";
+      var wrap = el("div", "broadcast-link");
+      var art = el("div", "broadcast-art");
+      art.setAttribute("aria-hidden", "true");
+      wrap.appendChild(art);
+      wrap.appendChild(el("span", "bug", "CREW SCREEN — DARK"));
+      frame.appendChild(wrap);
+    }
+    function showForm() {
+      document.documentElement.classList.remove("crew-hold");
+      var join = document.getElementById("crew-join");
+      var greet = document.getElementById("crew-greet");
+      var leave = document.getElementById("crew-leave");
+      if (join) join.hidden = false;
+      if (greet) { greet.hidden = true; greet.textContent = ""; }
+      if (leave) leave.hidden = true;
+      noteStoredPass();
+    }
+    function lockDown() {
+      if (rollTimer) { clearTimeout(rollTimer); rollTimer = 0; }
+      clearCrew();
+      pendingEmail = "";
+      pendingAlias = "";
+      showLockedWire();
+      showLockedScreen();
+      if (form) form.reset();
+      clearMarks();
+      showJoinStep();
+      say("");
+      showForm();
+      var name = document.getElementById("crew-name");
+      if (name) name.focus();
+    }
+    function unlock(alias) {
+      var join = document.getElementById("crew-join");
+      var greet = document.getElementById("crew-greet");
+      var leave = document.getElementById("crew-leave");
+      var row = document.getElementById("crew-leave-row");
+      if (join) join.hidden = true;
+      if (row) row.hidden = true;
+      if (greet) {
+        greet.hidden = false;
+        greet.textContent = "Welcome aboard, " + (alias || "crew");
+        if (!greet.hasAttribute("tabindex")) greet.setAttribute("tabindex", "-1");
+        greet.focus();
+      }
+      if (leave) leave.hidden = false;
+      document.documentElement.classList.remove("crew-hold");
+    }
+
+    function vidOf(item) {
+      if (!item) return "";
+      if (item.id && /^[\w-]{6,}$/.test(String(item.id))) return String(item.id);
+      var href = item.href || item.link || item.url || "";
+      var match = String(href).match(/[?&]v=([\w-]{6,})/);
+      return match ? match[1] : "";
+    }
+    function fmtWhen(when) {
+      if (!when) return "";
+      var d = new Date(when);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleDateString([], { month: "short", day: "numeric" }) + " " + d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    }
+    function safeHttp(url) {
+      if (!url || typeof url !== "string") return "";
+      try {
+        var parsed = new URL(url, window.location.href);
+        if (parsed.protocol === "https:" || parsed.protocol === "http:") return parsed.href;
+      } catch (ignore) {}
+      return "";
+    }
+    function localThumb(path) {
+      if (!path || typeof path !== "string") return "";
+      if (!/^assets\/[\w./-]+$/.test(path) || path.indexOf("..") !== -1) return "";
+      return path;
+    }
+    function renderWire(items) {
+      var wire = document.getElementById("crew-wire");
+      var label = wire ? wire.querySelector(".wire-label") : null;
+      var track = document.getElementById("crew-wire-track");
+      if (wire) wire.classList.remove("is-locked");
+      if (label) label.textContent = "THE CREW WIRE — WELLNESS · MIND · CRAFT";
+      if (!track) return;
+      track.textContent = "";
+      track.classList.remove("is-on");
+      if (!Array.isArray(items) || !items.length) {
+        var quiet = el("div", "wire-row");
+        quiet.appendChild(el("p", "wire-item wire-static", "The wire is quiet."));
+        track.appendChild(quiet);
+        return;
+      }
+      function row(hidden) {
+        var r = el("div", "wire-row");
+        if (hidden) r.setAttribute("aria-hidden", "true");
+        items.forEach(function (item) {
+          if (!item || typeof item !== "object") return;
+          var s = el("span", "wire-item");
+          var bar = el("span", "redact");
+          bar.setAttribute("aria-hidden", "true");
+          s.appendChild(bar);
+          s.appendChild(el("span", "wire-text", plain(item.headline || item.title)));
+          var when = plain(item.time) || fmtWhen(item.when);
+          var meta = plain(item.source);
+          if (when) meta = meta ? meta + " · " + when : when;
+          s.appendChild(el("span", "wire-meta", meta));
+          r.appendChild(s);
+        });
+        return r;
+      }
+      track.appendChild(row(false));
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reduce) {
+        track.appendChild(row(true));
+        track.classList.add("is-on");
+      }
+    }
+    function renderScreen(data) {
+      var frame = document.getElementById("crew-screen-frame");
+      var title = document.getElementById("crew-screen-title");
+      var note = document.getElementById("crew-screen-note");
+      var roll = document.getElementById("crew-roll-line");
+      var clock = document.getElementById("crew-next-roll");
+      var vids = (data && Array.isArray(data.newsVideos)) ? data.newsVideos : [];
+      var slot = (data && typeof data.rotationSlot === "number" && isFinite(data.rotationSlot)) ? data.rotationSlot : Math.floor(Date.now() / 1800000);
+      if (note) note.hidden = true;
+      if (roll) roll.hidden = false;
+      if (clock) {
+        var next = new Date((slot + 1) * 1800000);
+        clock.textContent = next.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+        clock.setAttribute("datetime", next.toISOString());
+      }
+      if (!frame || !title) return;
+      var picked = vids.length ? vids[((slot % vids.length) + vids.length) % vids.length] : null;
+      var item = picked && typeof picked === "object" ? picked : null;
+      title.textContent = item ? (plain(item.title) || "The screen is quiet.") : "The screen is quiet.";
+      frame.textContent = "";
+      if (!item) return;
+      var vid = vidOf(item);
+      var bug = plain(item.bug) || ("CREW SCREEN — " + (plain(item.source) || "DESK"));
+      if (vid) {
+        var embed = el("div", "broadcast-link screen-embed");
+        var iframe = document.createElement("iframe");
+        iframe.src = "https://www.youtube.com/embed/" + encodeURIComponent(vid) + "?rel=0&autoplay=1&mute=1";
+        iframe.title = plain(item.title) || "Broadcast";
+        iframe.setAttribute("allow", "autoplay; encrypted-media; picture-in-picture");
+        iframe.setAttribute("allowfullscreen", "");
+        iframe.loading = "lazy";
+        embed.appendChild(iframe);
+        embed.appendChild(el("span", "bug", bug));
+        frame.appendChild(embed);
+        return;
+      }
+      var href = safeHttp(plain(item.href || item.link || item.url));
+      var wrap = href ? el("a", "broadcast-link") : el("div", "broadcast-link");
+      if (href) {
+        wrap.href = href;
+        wrap.target = "_blank";
+        wrap.rel = "noopener noreferrer";
+      }
+      var thumb = localThumb(plain(item.thumb));
+      if (thumb) {
+        var image = document.createElement("img");
+        image.src = thumb;
+        image.alt = "";
+        wrap.appendChild(image);
+      } else {
+        var art = el("div", "broadcast-art");
+        art.setAttribute("aria-hidden", "true");
+        wrap.appendChild(art);
+      }
+      wrap.appendChild(el("span", "bug", bug));
+      if (href) wrap.appendChild(el("span", "sr-only", (plain(item.title) || "Open the source") + " (opens in a new tab)"));
+      frame.appendChild(wrap);
+    }
+    function scheduleRoll(data) {
+      if (rollTimer) clearTimeout(rollTimer);
+      var slot = (data && typeof data.rotationSlot === "number" && isFinite(data.rotationSlot)) ? data.rotationSlot : Math.floor(Date.now() / 1800000);
+      var delay = ((slot + 1) * 1800000) - Date.now();
+      if (!isFinite(delay) || delay < 5000) delay = 5000;
+      if (delay > 1800000) delay = 1800000;
+      rollTimer = setTimeout(function () {
+        var current = readCrew();
+        if (current) loadWire(current, true);
+      }, delay);
+    }
+    function loadWire(record, refresh) {
+      function quietFail(message) {
+        if (refresh) return;
+        say(message);
+        showForm();
+      }
+      if (!window.PortalAPI || typeof window.PortalAPI.call !== "function") {
+        quietFail(RIGGING);
+        return;
+      }
+      window.PortalAPI.call("getCrewWire", record.pass).then(function (data) {
+        if (data && data.needSignup) {
+          if (rollTimer) { clearTimeout(rollTimer); rollTimer = 0; }
+          clearCrew();
+          showLockedWire();
+          showLockedScreen();
+          showJoinStep();
+          showForm();
+          say("The roll needs a fresh sign-in.");
+          return;
+        }
+        if (engineTrouble(data)) {
+          quietFail(RIGGING);
+          return;
+        }
+        if (!data.ok) {
+          quietFail(data.error === "rate_limited" ? SIGNUP_ERRORS.rate_limited : RIGGING);
+          return;
+        }
+        unlock(record.alias || plain(data.alias) || "crew");
+        renderWire(data.headlines);
+        renderScreen(data);
+        scheduleRoll(data);
+        say("");
+      }).catch(function () {
+        quietFail(RIGGING);
+      });
+    }
+
+    function fail(input, message) {
+      mark(input, true);
+      say(message);
+      if (input && input.focus) input.focus();
+      return false;
+    }
+    function readJoin() {
+      clearMarks();
+      var nameInput = document.getElementById("crew-name");
+      var aliasInput = document.getElementById("crew-alias");
+      var industryInput = document.getElementById("crew-industry");
+      var purposeInput = document.getElementById("crew-purpose");
+      var emailInput = document.getElementById("crew-email");
+      var phoneInput = document.getElementById("crew-phone");
+      var hpInput = document.getElementById("crew-hp");
+      var agree = document.getElementById("crew-agree");
+      var texts = document.getElementById("crew-texts");
+      var name = clean(nameInput && nameInput.value);
+      var alias = clean(aliasInput && aliasInput.value);
+      var industry = clean(industryInput && industryInput.value);
+      var purpose = clean(purposeInput && purposeInput.value);
+      var email = clean(emailInput && emailInput.value);
+      var phone = clean(phoneInput && phoneInput.value);
+      var hp = clean(hpInput && hpInput.value);
+      if (hp.length > 200) hp = hp.slice(0, 200);
+      if (!name || name.length > CAP.name) return fail(nameInput, "Add your name.");
+      if (alias.length < 2 || alias.length > CAP.alias) return fail(aliasInput, "The alias needs 2 to 24 characters.");
+      if (!industry) return fail(industryInput, "Add your industry.");
+      if (industry.length > CAP.industry) return fail(industryInput, "Keep the industry to 60 characters.");
+      if (!purpose) return fail(purposeInput, "Add the purpose or goal on one line.");
+      if (purpose.length > CAP.purpose) return fail(purposeInput, "Keep the purpose to 140 characters.");
+      if (!emailOk(email) || email.length > CAP.email) return fail(emailInput, "Enter a real email so the code has somewhere to go.");
+      if (phone.length > CAP.phone) return fail(phoneInput, "Keep the line shorter.");
+      if (!agree || !agree.checked) return fail(agree, "Check the box to confirm you are 18 or older and agree to the Terms and Privacy Policy.");
+      if (texts && texts.checked && !phone) return fail(phoneInput, "Add the business or professional line if you want texts.");
+      return {
+        name: name,
+        alias: alias,
+        industry: industry,
+        purpose: purpose,
+        email: email,
+        phone: phone,
+        hp: hp,
+        agree18Terms: true,
+        textOptIn: !!(texts && texts.checked)
+      };
+    }
+    function afterSignup(result) {
+      if (engineTrouble(result)) { say(RIGGING); return; }
+      if (!result.ok || result.sent === false) {
+        say(result && SIGNUP_ERRORS[result.error] ? SIGNUP_ERRORS[result.error] : RIGGING);
+        return;
+      }
+      if (joinFields) joinFields.hidden = true;
+      showCodeStep();
+      say("Check your inbox for a 6-digit code.");
+    }
+    function afterVerify(result) {
+      if (engineTrouble(result)) { say(RIGGING); return; }
+      if (result.ok && (typeof result.pass !== "string" || !result.pass)) {
+        say(RIGGING);
+        return;
+      }
+      if (!result.ok || typeof result.pass !== "string" || !result.pass) {
+        var reason = result && result.error;
+        if (reason === "expired" || reason === "no_code") revealResend();
+        say(VERIFY_ERRORS[reason] || "That code was not accepted.");
+        return;
+      }
+      var alias = plain(result.alias) || pendingAlias || "crew";
+      if (!saveCrew(result.pass, alias, result.expiresAt)) {
+        say("That code was not accepted.");
+        return;
+      }
+      var record = readCrew();
+      if (!record) { say(RIGGING); return; }
+      say("");
+      loadWire(record);
+    }
+    function afterResend(result) {
+      if (engineTrouble(result)) { say(RIGGING); return; }
+      if (result.error === "rate_limited") { say(SIGNUP_ERRORS.rate_limited); return; }
+      if (result.error === "invalid") {
+        say("Enter a real email so the code has somewhere to go.");
+        return;
+      }
+      showCodeStep();
+      say(NEUTRAL);
+    }
+    function call(name, payload, done) {
+      if (!window.PortalAPI || typeof window.PortalAPI.call !== "function") {
+        say(RIGGING);
+        return;
+      }
+      setBusy(true);
+      window.PortalAPI.call(name, payload).then(function (result) {
+        setBusy(false);
+        done(result);
+      }).catch(function () {
+        setBusy(false);
+        say(RIGGING);
+      });
+    }
+    function submitJoin(event) {
+      if (event) event.preventDefault();
+      if (busy) return;
+      if (resendStep && !resendStep.hidden) {
+        var resendInput = document.getElementById("crew-resend-email");
+        resend(resendInput && resendInput.value, resendInput);
+        return;
+      }
+      if (codeStep && !codeStep.hidden && joinFields && joinFields.hidden) {
+        confirmCode();
+        return;
+      }
+      var payload = readJoin();
+      if (!payload) return;
+      pendingEmail = payload.email;
+      pendingAlias = payload.alias;
+      say("Sending.");
+      call("crewSignup", payload, afterSignup);
+    }
+    function confirmCode() {
+      if (busy) return;
+      var code = clean(codeInput && codeInput.value).replace(/\s+/g, "");
+      if (!/^\d{6}$/.test(code)) {
+        mark(codeInput, true);
+        say("That code needs six digits.");
+        if (codeInput) codeInput.focus();
+        return;
+      }
+      mark(codeInput, false);
+      if (!pendingEmail) {
+        say("Enter the email on the roll, then ask for a code.");
+        return;
+      }
+      say("Checking the code.");
+      call("crewVerify", { email: pendingEmail, code: code }, afterVerify);
+    }
+    function resend(email, input) {
+      if (busy) return;
+      var value = clean(email);
+      if (!emailOk(value) || value.length > CAP.email) {
+        mark(input, true);
+        say("Enter a real email so the code has somewhere to go.");
+        if (input && input.focus) input.focus();
+        return;
+      }
+      mark(input, false);
+      pendingEmail = value;
+      say("Sending.");
+      call("crewResend", { email: value }, afterResend);
+    }
+
+    if (form) form.addEventListener("submit", submitJoin);
+    var already = document.getElementById("crew-already");
+    if (already) already.addEventListener("click", function (event) {
+      if (event) event.preventDefault();
+      if (joinFields) joinFields.hidden = true;
+      if (resendStep) resendStep.hidden = false;
+      if (codeStep) codeStep.hidden = true;
+      say("");
+      var input = document.getElementById("crew-resend-email");
+      if (input) {
+        if (!input.value) input.value = pendingEmail || "";
+        input.focus();
+      }
+    });
+    var back = document.getElementById("crew-back-join");
+    if (back) back.addEventListener("click", function () {
+      showJoinStep();
+      say("");
+      var name = document.getElementById("crew-name");
+      if (name) name.focus();
+    });
+    if (resendSendBtn) resendSendBtn.addEventListener("click", function () {
+      var input = document.getElementById("crew-resend-email");
+      resend(input && input.value, input);
+    });
+    if (resendCodeBtn) resendCodeBtn.addEventListener("click", function () {
+      if (!pendingEmail) {
+        if (joinFields) joinFields.hidden = true;
+        if (resendStep) resendStep.hidden = false;
+        var input = document.getElementById("crew-resend-email");
+        say("Enter the email on the roll, then ask for a code.");
+        if (input) input.focus();
+        return;
+      }
+      resend(pendingEmail, document.getElementById("crew-resend-email"));
+    });
+    if (confirmBtn) confirmBtn.addEventListener("click", confirmCode);
+    if (codeInput) codeInput.addEventListener("keydown", function (event) {
+      if (event.key === "Enter") { event.preventDefault(); confirmCode(); }
+    });
+    var leave = document.getElementById("crew-leave");
+    var leaveLocked = document.getElementById("crew-leave-locked");
+    if (leave) leave.addEventListener("click", lockDown);
+    if (leaveLocked) leaveLocked.addEventListener("click", lockDown);
+
+    var purposeInput = document.getElementById("crew-purpose");
+    if (purposeInput) purposeInput.addEventListener("input", function () {
+      if (/[\r\n]/.test(purposeInput.value)) purposeInput.value = purposeInput.value.replace(/[\r\n]+/g, " ");
+    });
+
+    var record = readCrew();
+    if (record) loadWire(record);
+    else {
+      // Founders hold both rooms: a portal pass in this browser session
+      // opens the deck too (engine v13 checks the FOUNDING tier).
+      var founderPass = "";
+      try { founderPass = window.sessionStorage.getItem("ss.pass") || ""; } catch (ignore) {}
+      if (founderPass) loadWire({ pass: founderPass, alias: "" });
+      else {
+        clearCrew();
+        showForm();
+      }
+    }
+  })();
+  </script>
+  <script>
+  (function () {
+    function openForm(toResend) {
+      document.body.classList.add("crew-open");
+      if (toResend) {
+        var a = document.getElementById("crew-already");
+        if (a) a.click();
+      } else {
+        var n = document.getElementById("crew-name");
+        if (n) n.focus();
+      }
+      var s = document.getElementById("crew-join");
+      if (s && s.scrollIntoView) s.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    var joinBtn = document.getElementById("crew-open-form");
+    if (joinBtn) joinBtn.addEventListener("click", function () { openForm(false); });
+    var alreadyLink = document.getElementById("crew-open-already");
+    if (alreadyLink) alreadyLink.addEventListener("click", function (e) { e.preventDefault(); openForm(true); });
+    ["crew-leave", "crew-leave-locked"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) b.addEventListener("click", function () { document.body.classList.remove("crew-open"); });
+    });
+    if (window.location.hash === "#join") {
+      var hasCrew = false, hasPortal = "";
+      try { hasCrew = !!window.localStorage.getItem("ss_crew_pass"); } catch (ignore) {}
+      try { hasPortal = window.sessionStorage.getItem("ss.pass") || ""; } catch (ignore) {}
+      if (!hasCrew && !hasPortal) openForm(false);
+    }
+  })();
+  </script>
+</body>
+</html>

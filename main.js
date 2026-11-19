@@ -950,7 +950,33 @@ function initPortal() {
     var seat = profile ? seatLabel(profile.seat) : '';
     if (seat) bits.push(seat);
     if (meta) meta.textContent = bits.join(' · ');
+    renderAppPanel([]);
     loadDesk(readPass(), profile);
+  }
+
+  function renderAppPanel(dropItems) {
+    var app = document.getElementById('panel-app');
+    if (!app) return;
+    app.textContent = '';
+    app.appendChild(el('h2', null, 'My App'));
+    app.appendChild(el('p', 'lede-left', 'The practice lives on this desk: five pillars, ninety days, and the rank ladder. Hydration, Fitness, Nutrition, Mind, Economics.'));
+    var list = el('ol', 'quiet-list');
+    PILLARS.forEach(function (pillar, i) {
+      var item = el('li');
+      item.appendChild(el('span', 'idx', '0' + (i + 1)));
+      item.appendChild(document.createTextNode(' ' + pillar));
+      list.appendChild(item);
+    });
+    app.appendChild(list);
+    app.appendChild(el('p', null, 'Ninety days. One path.'));
+    (dropItems || []).forEach(function (item) {
+      var card = el('article', 'drop');
+      card.appendChild(el('p', 'kind', item.when || [item.category, item.date].filter(Boolean).join(' · ') || 'Release'));
+      card.appendChild(el('h3', null, item.title || 'Release'));
+      var note = item.note || item.body;
+      if (note) card.appendChild(el('p', null, note));
+      app.appendChild(card);
+    });
   }
 
   function loadDesk(pass, profile) {
@@ -973,29 +999,7 @@ function initPortal() {
           you = { username: row.username, rank: named ? named.name : (row.rankName || row.rank || '') };
         }
       });
-      var app = document.getElementById('panel-app');
-      if (app) {
-        app.textContent = '';
-        app.appendChild(el('h2', null, 'My App'));
-        app.appendChild(el('p', 'lede-left', 'The practice lives on this desk: five pillars, ninety days, and the rank ladder. Hydration, Fitness, Nutrition, Mind, Economics.'));
-        var list = el('ol', 'quiet-list');
-        PILLARS.forEach(function (pillar, i) {
-          var item = el('li');
-          item.appendChild(el('span', 'idx', '0' + (i + 1)));
-          item.appendChild(document.createTextNode(' ' + pillar));
-          list.appendChild(item);
-        });
-        app.appendChild(list);
-        app.appendChild(el('p', null, 'Ninety days. One path.'));
-        dropItems.forEach(function (item) {
-          var card = el('article', 'drop');
-          card.appendChild(el('p', 'kind', item.when || [item.category, item.date].filter(Boolean).join(' · ') || 'Release'));
-          card.appendChild(el('h3', null, item.title || 'Release'));
-          var note = item.note || item.body;
-          if (note) card.appendChild(el('p', null, note));
-          app.appendChild(card);
-        });
-      }
+      renderAppPanel(dropItems);
       var learn = document.getElementById('panel-learn');
       if (learn) {
         learn.textContent = '';
