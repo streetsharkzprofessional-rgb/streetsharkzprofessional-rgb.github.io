@@ -86,12 +86,17 @@ function normalizeNews(item) {
     };
   }
   var source = item.source || 'WIRE';
+  var href = watchHref(item);
+  var vid = '';
+  if (item.id && /^[\w-]{6,}$/.test(String(item.id))) vid = String(item.id);
+  if (!vid && href) { var vm = href.match(/[?&]v=([\w-]{6,})/); if (vm) vid = vm[1]; }
   return {
     kind: 'news',
     title: item.title || 'Dispatch',
     source: source,
     bug: item.bug || ('GLOBAL INTEL — ' + String(source).toUpperCase()),
-    href: watchHref(item),
+    href: href,
+    vid: vid,
     thumb: item.thumb && !/^https?:/i.test(item.thumb) ? item.thumb : ''
   };
 }
@@ -1248,6 +1253,19 @@ function renderBigScreen(item) {
   if (item.kind === 'own') {
     frame.appendChild(buildOwnScreen(item));
     initScreens(frame);
+    return;
+  }
+  if (item.vid) {
+    var embedWrap = el('div', 'broadcast-link screen-embed');
+    var iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube.com/embed/' + encodeURIComponent(item.vid) + '?rel=0&autoplay=1&mute=1';
+    iframe.title = item.title || 'Broadcast';
+    iframe.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
+    iframe.setAttribute('allowfullscreen', '');
+    iframe.loading = 'lazy';
+    embedWrap.appendChild(iframe);
+    embedWrap.appendChild(el('span', 'bug', item.bug || ('GLOBAL INTEL — ' + (item.source || 'DESK'))));
+    frame.appendChild(embedWrap);
     return;
   }
   var link = el('a', 'broadcast-link');
