@@ -1022,3 +1022,6 @@ textarea { min-height: 120px; resize: vertical; }
   .site-header, .ticker, .fin, .hero-canvas, .sea-svg, .sound, .wire { display: none !important; }
   a { color: #111; }
 }
+
+.cards-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; align-items: start; }
+@media (max-width: 900px) { .cards-row { grid-template-columns: 1fr; max-width: 480px; } }
