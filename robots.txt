@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /portal
+Disallow: /portal.html
+Disallow: /room
+Disallow: /room.html
+Disallow: /crew
+Disallow: /crew.html

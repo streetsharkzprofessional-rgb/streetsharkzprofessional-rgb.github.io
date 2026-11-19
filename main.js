@@ -709,15 +709,24 @@ function initAssessment() {
       answers.push(value);
       if (PILLAR_OF_Q[i] >= 0) scores[PILLAR_OF_Q[i]] += value;
     }
+    var nameInput = document.getElementById('report-name');
+    var nameValue = nameInput ? nameInput.value.trim() : '';
+    if (nameValue.length > 80) {
+      if (nameInput) nameInput.setAttribute('aria-invalid', 'true');
+      problems.push({ id: 'report-name', message: 'Keep the name to 80 characters.' });
+    } else if (nameInput) nameInput.removeAttribute('aria-invalid');
     var emailInput = document.getElementById('report-email');
     var email = emailInput.value.trim();
-    if (!emailOk(email)) {
+    if (!emailOk(email) || email.length > 254) {
       emailInput.setAttribute('aria-invalid', 'true');
       problems.push({ id: 'report-email', message: 'Email is required.' });
     } else emailInput.removeAttribute('aria-invalid');
     var delivery = form.querySelector('input[name="delivery"]:checked');
     var phone = document.getElementById('report-phone').value.trim();
-    if (delivery && delivery.value !== 'Email' && phone.replace(/\D/g, '').length < 7) {
+    if (phone.length > 32) {
+      document.getElementById('report-phone').setAttribute('aria-invalid', 'true');
+      problems.push({ id: 'report-phone', message: 'Keep the phone number shorter.' });
+    } else if (delivery && delivery.value !== 'Email' && phone.replace(/\D/g, '').length < 7) {
       document.getElementById('report-phone').setAttribute('aria-invalid', 'true');
       problems.push({ id: 'report-phone', message: 'Add a phone number for a text message.' });
     } else document.getElementById('report-phone').removeAttribute('aria-invalid');
@@ -725,6 +734,14 @@ function initAssessment() {
       showErrors(errors, problems);
       return;
     }
+    var now = Date.now();
+    var lastAt = 0;
+    try { lastAt = parseInt(sessionStorage.getItem('ss.assess.at') || '0', 10) || 0; } catch (ignore) {}
+    if (lastAt && now - lastAt < 20000) {
+      showErrors(errors, [{ id: 'send-report', message: 'Give it a moment, then send the report again.' }]);
+      return;
+    }
+    try { sessionStorage.setItem('ss.assess.at', String(now)); } catch (ignore) {}
     errors.hidden = true;
     var q2 = answers[1];
     var total = scores.reduce(function (sum, n) { return sum + n; }, 0);
@@ -847,9 +864,11 @@ function initAssessment() {
       if (result && result.ok) confirm.textContent = 'Your full report is on its way by the delivery you chose.';
       else confirm.textContent = 'Your map is on this page. Keep it, and start with the path above.';
     }
-    if (window.PortalAPI) {
+    var trap = document.getElementById('report-company');
+    var trapped = trap && String(trap.value || '').replace(/^\s+|\s+$/g, '').length > 0;
+    if (window.PortalAPI && !trapped) {
       window.PortalAPI.call('submitAssessment', payload).then(finish).catch(function () { finish(null); });
-    } else finish(null);
+    } else finish(trapped ? { ok: true } : null);
   });
 }
 
@@ -1035,13 +1054,20 @@ function initPortal() {
   function sendCode() {
     if (!window.PortalAPI) { say('The desk is not connected yet.'); return; }
     var email = emailInput.value.trim();
-    if (!emailOk(email)) {
+    if (!emailOk(email) || email.length > 254) {
       emailInput.setAttribute('aria-invalid', 'true');
       say('Enter a real email so the code has somewhere to go.');
       emailInput.focus();
       return;
     }
+    var sentAt = 0;
+    try { sentAt = parseInt(sessionStorage.getItem('ss.code.at') || '0', 10) || 0; } catch (ignore) {}
+    if (sentAt && Date.now() - sentAt < 20000) {
+      say('Give it a moment, then ask for a code again.');
+      return;
+    }
     emailInput.removeAttribute('aria-invalid');
+    try { sessionStorage.setItem('ss.code.at', String(Date.now())); } catch (ignore) {}
     sendButton.disabled = true;
     say('Sending.');
     window.PortalAPI.call('sendMyCode', email).then(function (result) {
@@ -1069,6 +1095,13 @@ function initPortal() {
       codeInput.focus();
       return;
     }
+    var checkedAt = 0;
+    try { checkedAt = parseInt(sessionStorage.getItem('ss.code.check') || '0', 10) || 0; } catch (ignore) {}
+    if (checkedAt && Date.now() - checkedAt < 8000) {
+      say('Give it a moment, then check the code again.');
+      return;
+    }
+    try { sessionStorage.setItem('ss.code.check', String(Date.now())); } catch (ignore) {}
     codeInput.removeAttribute('aria-invalid');
     confirmButton.disabled = true;
     say('Checking the code.');
