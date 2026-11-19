@@ -327,6 +327,39 @@ function initHero() {
   frame();
 }
 
+function showPlayControl(screen, video) {
+  if (!screen || !video || screen.classList.contains('is-fallback')) return;
+  var playBtn = screen.querySelector('.play-btn');
+  if (!playBtn) {
+    playBtn = el('button', 'play-btn', 'Play');
+    playBtn.type = 'button';
+    playBtn.setAttribute('aria-label', 'Play');
+    playBtn.addEventListener('click', function () {
+      if (screen.classList.contains('is-fallback')) return;
+      if (video.paused) {
+        var pending = video.play();
+        if (pending && pending.then) {
+          pending.then(function () {
+            playBtn.textContent = 'Pause';
+            playBtn.setAttribute('aria-label', 'Pause');
+          }).catch(function () {
+            playBtn.textContent = 'Play';
+            playBtn.setAttribute('aria-label', 'Play');
+          });
+        }
+      } else {
+        video.pause();
+        playBtn.textContent = 'Play';
+        playBtn.setAttribute('aria-label', 'Play');
+      }
+    });
+    screen.appendChild(playBtn);
+  }
+  playBtn.hidden = false;
+  playBtn.textContent = video.paused ? 'Play' : 'Pause';
+  playBtn.setAttribute('aria-label', playBtn.textContent);
+}
+
 function ensureScreenObserver() {
   if (screenObserver || !('IntersectionObserver' in window) || reduceMotion()) return;
   screenObserver = new IntersectionObserver(function (entries) {
@@ -334,14 +367,14 @@ function ensureScreenObserver() {
       var video = entry.target;
       var screen = video.closest('[data-screen]');
       if (!screen || screen.classList.contains('is-fallback')) return;
-      if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.25) {
         var play = video.play();
-        if (play && play.catch) play.catch(function () {});
-      } else {
+        if (play && play.catch) play.catch(function () { showPlayControl(screen, video); });
+      } else if (!entry.isIntersecting) {
         video.pause();
       }
     });
-  }, { threshold: [0, 0.45, 0.75] });
+  }, { threshold: [0, 0.25, 0.6], rootMargin: '120px 0px' });
 }
 
 function bindScreen(screen) {
@@ -362,25 +395,13 @@ function bindScreen(screen) {
     fallback();
     return;
   }
-  if (source && !source.getAttribute('src')) source.src = src;
+  if (source && !source.getAttribute('src')) {
+    source.src = src;
+    try { video.load(); } catch (ignore) {}
+  }
   ensureScreenObserver();
   if (screenObserver) screenObserver.observe(video);
-  if (reduceMotion()) {
-    var playBtn = el('button', 'play-btn', 'Play');
-    playBtn.type = 'button';
-    playBtn.addEventListener('click', function () {
-      if (screen.classList.contains('is-fallback')) return;
-      if (video.paused) {
-        var pending = video.play();
-        if (pending && pending.catch) pending.catch(function () {});
-        playBtn.textContent = 'Pause';
-      } else {
-        video.pause();
-        playBtn.textContent = 'Play';
-      }
-    });
-    screen.appendChild(playBtn);
-  }
+  if (reduceMotion()) showPlayControl(screen, video);
 }
 
 function initScreens(root) {
@@ -414,7 +435,7 @@ function initSound() {
       button.textContent = 'Sound off';
       button.setAttribute('aria-pressed', 'true');
       var pending = video.play();
-      if (pending && pending.catch) pending.catch(function () {});
+      if (pending && pending.catch) pending.catch(function () { showPlayControl(screen, video); });
     }
   });
 }
