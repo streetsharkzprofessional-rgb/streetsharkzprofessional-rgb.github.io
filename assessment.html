@@ -45,17 +45,90 @@
         <p class="eyebrow"><span>00</span> Free</p>
         <h1>Sharked Up Assessment</h1>
         <div class="prose stack">
-          <p>The Sharked Up Assessment is a brief profile, designed to capture only the essential information needed to understand where you are and where you want to go. We keep this process minimal and focused so we can quickly identify the most effective path forward for your business and professional image, without wasting your time on unnecessary detail.</p>
-          <p>Step 1. Fill out the assessment.</p>
-          <p>Step 2. Receive your individual report and market data assets, free.</p>
-          <p>From there, you are able to map out a structured approach to improvement — tightening processes, eliminating inefficiencies, and implementing systems that produce more consistent, predictable results. The objective is simple: stronger operations, cleaner execution, and measurable growth.</p>
-          <p>Your report also includes a deeper diagnostic of your strongest and weakest pillars. That deeper diagnostic is free, with the report and the market data assets.</p>
+          <p>Five pillars hold up your performance: hydration, nutrition, fitness, mind, economics. Twelve questions. Answer where you actually are — not where you post like you are — and get your map.</p>
+          <p>Step 1. Fill out the assessment. Step 2. Receive your individual report and market data assets, free.</p>
+          <p>Your free gift for finishing: a deeper diagnostic of your strongest and weakest areas, generated from your own scores, delivered the way you choose below.</p>
         </div>
-        <form id="assessment-form" class="form-card" hidden novalidate>
+        <form id="assessment-form" class="form-card" novalidate>
           <div id="form-errors" class="form-errors" role="alert" tabindex="-1" hidden></div>
-          <div id="question-root"></div>
+          <fieldset class="q" id="field-q0"><legend>1. Which best describes you?</legend>
+            <label class="choice"><input type="radio" name="q0" value="0" required> Business owner with a team</label>
+            <label class="choice"><input type="radio" name="q0" value="1"> Owner-operator — I am the business</label>
+            <label class="choice"><input type="radio" name="q0" value="2"> Professional building a book of clients</label>
+            <label class="choice"><input type="radio" name="q0" value="3"> Employed, building on the side</label>
+          </fieldset>
+          <fieldset class="q" id="field-q1"><legend>2. What do you want most in the next 90 days?</legend>
+            <label class="choice"><input type="radio" name="q1" value="0" required> More revenue</label>
+            <label class="choice"><input type="radio" name="q1" value="1"> More energy and health</label>
+            <label class="choice"><input type="radio" name="q1" value="2"> More focus and calm</label>
+            <label class="choice"><input type="radio" name="q1" value="3"> All of it — in that order</label>
+          </fieldset>
+          <fieldset class="q" id="field-q2"><legend>3. Hydration — By midday, how much water have you usually had?</legend>
+            <label class="choice"><input type="radio" name="q2" value="0" required> None yet</label>
+            <label class="choice"><input type="radio" name="q2" value="1"> A glass or two</label>
+            <label class="choice"><input type="radio" name="q2" value="2"> About half of what I should</label>
+            <label class="choice"><input type="radio" name="q2" value="3"> I track it and I'm on pace</label>
+          </fieldset>
+          <fieldset class="q" id="field-q3"><legend>4. Hydration — Do you know how much water your body needs in a day?</legend>
+            <label class="choice"><input type="radio" name="q3" value="0" required> No idea</label>
+            <label class="choice"><input type="radio" name="q3" value="1"> I guess</label>
+            <label class="choice"><input type="radio" name="q3" value="2"> Rough idea</label>
+            <label class="choice"><input type="radio" name="q3" value="3"> I have a number and I hit it</label>
+          </fieldset>
+          <fieldset class="q" id="field-q4"><legend>5. Nutrition — On a workday, your eating usually looks like:</legend>
+            <label class="choice"><input type="radio" name="q4" value="0" required> Skipped meals, then heavy late</label>
+            <label class="choice"><input type="radio" name="q4" value="1"> Whatever is closest</label>
+            <label class="choice"><input type="radio" name="q4" value="2"> Regular meals, not planned</label>
+            <label class="choice"><input type="radio" name="q4" value="3"> Planned around my work</label>
+          </fieldset>
+          <fieldset class="q" id="field-q5"><legend>6. Nutrition — Who decides your fuel — you, or the day?</legend>
+            <label class="choice"><input type="radio" name="q5" value="0" required> The day decides</label>
+            <label class="choice"><input type="radio" name="q5" value="1"> Mostly the day</label>
+            <label class="choice"><input type="radio" name="q5" value="2"> Mostly me</label>
+            <label class="choice"><input type="radio" name="q5" value="3"> I decide — it's a system</label>
+          </fieldset>
+          <fieldset class="q" id="field-q6"><legend>7. Fitness — Right now, your training is:</legend>
+            <label class="choice"><input type="radio" name="q6" value="0" required> None</label>
+            <label class="choice"><input type="radio" name="q6" value="1"> Starting over</label>
+            <label class="choice"><input type="radio" name="q6" value="2"> On and off</label>
+            <label class="choice"><input type="radio" name="q6" value="3"> Consistent, weekly</label>
+          </fieldset>
+          <fieldset class="q" id="field-q7"><legend>8. Fitness — Your body across a long workday:</legend>
+            <label class="choice"><input type="radio" name="q7" value="0" required> Runs out of gas</label>
+            <label class="choice"><input type="radio" name="q7" value="1"> Aches and tight</label>
+            <label class="choice"><input type="radio" name="q7" value="2"> Holds up fine</label>
+            <label class="choice"><input type="radio" name="q7" value="3"> Strong all day</label>
+          </fieldset>
+          <fieldset class="q" id="field-q8"><legend>9. Mind — Your attention on a normal day:</legend>
+            <label class="choice"><input type="radio" name="q8" value="0" required> Scattered — the phone runs me</label>
+            <label class="choice"><input type="radio" name="q8" value="1"> Jumping between fires</label>
+            <label class="choice"><input type="radio" name="q8" value="2"> Mostly focused</label>
+            <label class="choice"><input type="radio" name="q8" value="3"> Locked in for hours</label>
+          </fieldset>
+          <fieldset class="q" id="field-q9"><legend>10. Mind — Your sleep:</legend>
+            <label class="choice"><input type="radio" name="q9" value="0" required> Short and broken</label>
+            <label class="choice"><input type="radio" name="q9" value="1"> Enough hours, poor quality</label>
+            <label class="choice"><input type="radio" name="q9" value="2"> Decent</label>
+            <label class="choice"><input type="radio" name="q9" value="3"> Deep and consistent</label>
+          </fieldset>
+          <fieldset class="q" id="field-q10"><legend>11. Economics — Your money picture right now:</legend>
+            <label class="choice"><input type="radio" name="q10" value="0" required> Leaks I can't name</label>
+            <label class="choice"><input type="radio" name="q10" value="1"> I know the leaks — no patch yet</label>
+            <label class="choice"><input type="radio" name="q10" value="2"> Books are steady</label>
+            <label class="choice"><input type="radio" name="q10" value="3"> Ready to scale</label>
+          </fieldset>
+          <fieldset class="q" id="field-q11"><legend>12. Economics — Your offer:</legend>
+            <label class="choice"><input type="radio" name="q11" value="0" required> No clear offer</label>
+            <label class="choice"><input type="radio" name="q11" value="1"> An offer, sold inconsistently</label>
+            <label class="choice"><input type="radio" name="q11" value="2"> An offer that sells</label>
+            <label class="choice"><input type="radio" name="q11" value="3"> An offer with a system behind it</label>
+          </fieldset>
           <fieldset id="delivery-set">
-            <legend>Where should we send the report?</legend>
+            <legend>Where does your report go?</legend>
+            <div class="field">
+              <label for="report-name">Full name</label>
+              <input id="report-name" name="name" type="text" autocomplete="name">
+            </div>
             <div class="field">
               <label for="report-email">Email</label>
               <input id="report-email" name="email" type="email" autocomplete="email" required>
@@ -63,22 +136,31 @@
             <div class="field">
               <label for="report-phone">Phone</label>
               <input id="report-phone" name="phone" type="tel" autocomplete="tel">
-              <p class="hint">Required if you want the report by text message.</p>
+              <p class="hint">For a text message, add a mobile number.</p>
             </div>
-            <p class="hint">Delivery</p>
-            <label class="choice"><input type="radio" name="delivery" value="Email" required> Email</label>
+            <p class="hint">How do you want your report delivered?</p>
+            <label class="choice"><input type="radio" name="delivery" value="Email" checked> Email</label>
             <label class="choice"><input type="radio" name="delivery" value="Text message"> Text message</label>
             <label class="choice"><input type="radio" name="delivery" value="Both"> Both</label>
           </fieldset>
-          <button class="btn btn-solid" type="submit">Send my assessment</button>
+          <button class="btn btn-solid" type="submit" id="send-report">Send my report</button>
+          <p class="hint">This report reflects your own answers back to you; it is not medical, nutritional, fitness, or financial advice.</p>
         </form>
         <div id="assessment-done" class="done" hidden tabindex="-1">
-          <h2>Your assessment is in.</h2>
-          <p>Your individual report and market data assets are on the way, free. They include a deeper diagnostic of your strongest and weakest pillars.</p>
-          <p id="pillar-result" class="cta-row"></p>
+          <p class="eyebrow">Your map</p>
+          <h2>The five pillars, scored from your own answers</h2>
+          <div id="map-rows"></div>
+          <p id="map-total" class="cta-row"></p>
+          <h3 class="subhead">Your free gift — the deeper diagnostic</h3>
+          <div id="map-diagnostic" class="prose stack"></div>
+          <h3 class="subhead">Where your map points</h3>
+          <p id="map-ref"></p>
+          <p id="map-partner" class="hint" hidden></p>
+          <p id="map-offer" class="cta-row"></p>
+          <p id="confirm-line" class="status" role="status"></p>
+          <p class="hint">This report reflects your own answers back to you; it is not medical, nutritional, fitness, or financial advice.</p>
           <p class="cta-row"><a class="btn btn-ghost" href="index.html">Return home</a></p>
         </div>
-        <noscript><p class="noscript">The questions load with the page script. The description above still stands. Email Office@StreetSharkz.com if you need the assessment another way.</p></noscript>
       </div>
     </section>
   </main>

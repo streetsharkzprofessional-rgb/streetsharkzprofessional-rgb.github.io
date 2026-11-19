@@ -1,64 +1,9 @@
 /* Street Sharkz Professional — page behavior.
    No external libraries. The engine is reached only through PortalAPI.call. */
 
-/* TODO-FIN
-   Replace ASSESSMENT_QUESTIONS with the 12 verbatim questions from the
-   live assessment, in the same order. Replace ASSESSMENT_SCALE if the
-   live choices differ. Replace scoreAssessment if the live form scores
-   pillars differently. These placeholders follow the five pillars and
-   the Sharkonomicz practice so the page can be previewed. They are not
-   the live wording.
-*/
-var ASSESSMENT_SCALE = [
-  { value: 1, label: 'Not yet' },
-  { value: 2, label: 'Rarely' },
-  { value: 3, label: 'Some of the time' },
-  { value: 4, label: 'Most of the time' },
-  { value: 5, label: 'It is logged and steady' }
-];
-
-var ASSESSMENT_QUESTIONS = [
-  { id: 'q1', pillar: 'Hydration', prompt: 'How often does water have a place in your day, on purpose?' },
-  { id: 'q2', pillar: 'Hydration', prompt: 'Do you notice the hours when you go without water?' },
-  { id: 'q3', pillar: 'Fitness', prompt: 'How many days in a week does your body get real work?' },
-  { id: 'q4', pillar: 'Fitness', prompt: 'Is that work written down, or does it stay a hope?' },
-  { id: 'q5', pillar: 'Nutrition', prompt: 'How steady are your meals across a working day?' },
-  { id: 'q6', pillar: 'Nutrition', prompt: 'Could you say what you ate yesterday without guessing?' },
-  { id: 'q7', pillar: 'Mind', prompt: 'When the day gets loud, can you come back to the task in front of you?' },
-  { id: 'q8', pillar: 'Mind', prompt: 'Do you end the day knowing what you actually did?' },
-  { id: 'q9', pillar: 'Mind', prompt: 'Is there a quiet minute that belongs to you, most days?' },
-  { id: 'q10', pillar: 'Economics', prompt: 'Do you know what came in and what went out this week?' },
-  { id: 'q11', pillar: 'Economics', prompt: 'Is follow-up a system, or does it live in your head?' },
-  { id: 'q12', pillar: 'Economics', prompt: 'When something leaks — time, money, or a missed step — do you log it and adjust?' }
-];
-
-/* TODO-FIN
-   Replace SELLER_FIELDS with the live Seller Intake fields, same order,
-   same required flags, same choices. SELLER_CALL is the engine name until
-   Fin confirms it.
-*/
-var SELLER_CALL = 'submitSellerIntake';
-var SELLER_FIELDS = [
-  { id: 'name', label: 'Your name', type: 'text', required: true, autocomplete: 'name' },
-  { id: 'business', label: 'Business or practice name', type: 'text', required: true, autocomplete: 'organization' },
-  { id: 'role', label: 'Your role', type: 'text', required: true, autocomplete: 'organization-title' },
-  { id: 'email', label: 'Email', type: 'email', required: true, autocomplete: 'email' },
-  { id: 'phone', label: 'Phone', type: 'tel', required: false, autocomplete: 'tel' },
-  { id: 'operation', label: 'What does the operation sell or deliver?', type: 'textarea', required: true },
-  { id: 'leak', label: 'Where does the work feel heavier than the revenue?', type: 'textarea', required: true },
-  {
-    id: 'next',
-    label: 'What should happen next?',
-    type: 'select',
-    required: true,
-    options: [
-      'Free systems diagnostic',
-      'Qualified prospects — Starter',
-      'Qualified prospects — Exclusive',
-      'Qualified prospects — Prospect Plus'
-    ]
-  }
-];
+/* The twelve assessment questions live in assessment.html.
+   Scoring below matches that instrument: Q1–Q2 unscored, Q3–Q12
+   at 0–3 into five pillars, two questions each. */
 
 /* Rank ladder. Keep these points in step with the depth gauge and the
    public ladder on the homepage. */
@@ -73,7 +18,7 @@ var RANKS = [
   { name: 'Apex', points: 66 }
 ];
 
-var PILLARS = ['Hydration', 'Fitness', 'Nutrition', 'Mind', 'Economics'];
+var PILLARS = ['Hydration', 'Nutrition', 'Fitness', 'Mind', 'Economics'];
 
 var memoryPass = '';
 var videoManifest = null;
@@ -97,6 +42,74 @@ function reduceMotion() {
 
 function emailOk(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || '').trim());
+}
+
+function safeMsg(value, fallback) {
+  var msg = String(value || fallback || 'The desk could not be reached. Try again shortly.');
+  if (/https?:|script\./i.test(msg)) return fallback || 'The desk could not be reached. Try again shortly.';
+  return msg;
+}
+
+function normalizeHeadline(item, index) {
+  var when = item.time || '';
+  if (item.when) when = formatWhen(item.when);
+  return {
+    id: item.id || ('h' + index),
+    headline: item.headline || item.title || '',
+    source: item.source || 'WIRE',
+    time: when,
+    url: item.url || item.link || '',
+    newest: index === 0 || !!item.newest
+  };
+}
+
+function watchHref(item) {
+  if (!item) return '';
+  if (item.href) return item.href;
+  if (item.link) return item.link;
+  if (item.url && !/\.mp4($|\?)/i.test(item.url)) return item.url;
+  if (item.id && /^[\w-]{6,}$/.test(String(item.id))) {
+    return 'https://www.youtube.com/watch?v=' + encodeURIComponent(item.id);
+  }
+  return '';
+}
+
+function normalizeNews(item) {
+  var local = item.src || ((item.url && /\.mp4($|\?)/i.test(item.url)) ? item.url : '');
+  if (item.kind === 'own' || local) {
+    return {
+      kind: 'own',
+      title: item.title || 'Clip',
+      source: item.source || 'STREET SHARKZ',
+      src: local || item.src || '',
+      bug: item.bug || 'BRIDGE — STREET SHARKZ'
+    };
+  }
+  var source = item.source || 'WIRE';
+  return {
+    kind: 'news',
+    title: item.title || 'Dispatch',
+    source: source,
+    bug: item.bug || ('GLOBAL INTEL — ' + String(source).toUpperCase()),
+    href: watchHref(item),
+    thumb: item.thumb && !/^https?:/i.test(item.thumb) ? item.thumb : ''
+  };
+}
+
+function normalizePost(post) {
+  return {
+    username: post.username || 'Member',
+    text: post.text || post.body || '',
+    at: post.at || post.ts || ''
+  };
+}
+
+function rankByName(name) {
+  var found = null;
+  RANKS.forEach(function (rank) {
+    if (String(name || '').toLowerCase() === rank.name.toLowerCase()) found = rank;
+  });
+  return found;
 }
 
 function savePass(pass) {
@@ -629,71 +642,17 @@ function initFounding() {
   });
 }
 
-function scoreAssessment(answers) {
-  var buckets = {};
-  PILLARS.forEach(function (pillar) { buckets[pillar] = []; });
-  answers.forEach(function (answer) {
-    if (buckets[answer.pillar]) buckets[answer.pillar].push(Number(answer.value));
-  });
-  var scores = {};
-  PILLARS.forEach(function (pillar) {
-    var list = buckets[pillar];
-    if (!list.length) {
-      scores[pillar] = 0;
-      return;
-    }
-    var sum = list.reduce(function (total, n) { return total + n; }, 0);
-    scores[pillar] = Math.round((sum / list.length) * 10) / 10;
-  });
-  var strongest = PILLARS[0];
-  var weakest = PILLARS[0];
-  PILLARS.forEach(function (pillar) {
-    if (scores[pillar] > scores[strongest]) strongest = pillar;
-    if (scores[pillar] < scores[weakest]) weakest = pillar;
-  });
-  return {
-    scores: scores,
-    strongest: strongest,
-    weakest: weakest,
-    level: scores[strongest] === scores[weakest]
-  };
-}
-
-function renderQuestions(root) {
-  var current = '';
-  ASSESSMENT_QUESTIONS.forEach(function (question, index) {
-    if (question.pillar !== current) {
-      current = question.pillar;
-      var block = el('div', 'pillar-block');
-      block.appendChild(el('h2', null, question.pillar));
-      root.appendChild(block);
-    }
-    var host = root.lastChild;
-    var field = document.createElement('fieldset');
-    field.id = 'field-' + question.id;
-    var legend = document.createElement('legend');
-    legend.textContent = (index + 1) + '. ' + question.prompt;
-    field.appendChild(legend);
-    ASSESSMENT_SCALE.forEach(function (option) {
-      var label = el('label', 'choice');
-      var input = document.createElement('input');
-      input.type = 'radio';
-      input.name = question.id;
-      input.value = String(option.value);
-      input.required = true;
-      label.appendChild(input);
-      label.appendChild(document.createTextNode(option.label));
-      field.appendChild(label);
-    });
-    host.appendChild(field);
-  });
+function safeMsg(value, fallback) {
+  var msg = String(value || fallback || 'The desk could not be reached. Try again shortly.');
+  if (/https?:|script\./i.test(msg)) return fallback || 'The desk could not be reached. Try again shortly.';
+  return msg;
 }
 
 function showErrors(box, items) {
+  if (!box) return;
   box.hidden = false;
   box.textContent = '';
-  var intro = el('p', null, 'A few lines still need an answer.');
-  box.appendChild(intro);
+  box.appendChild(el('p', null, 'A few lines still need an answer.'));
   var list = document.createElement('ul');
   items.forEach(function (item) {
     var li = document.createElement('li');
@@ -706,179 +665,138 @@ function showErrors(box, items) {
   box.focus();
 }
 
+/* Instrument scoring. Q1 and Q2 are qualifiers. Q3–Q12 score 0–3
+   into Hydration, Nutrition, Fitness, Mind, Economics — two questions
+   each, 0–6 a pillar, 0–30 total. A tie for the low pillar breaks
+   toward the wish named in question 2. */
+var INSTRUMENT_PILLARS = ['Hydration', 'Nutrition', 'Fitness', 'Mind', 'Economics'];
+var PILLAR_OF_Q = [-1, -1, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4];
+var INSTRUMENT_REF = [
+  'The water plan — free Pup tier of the Peak Performance beta',
+  'A nutrition expert',
+  'A gym',
+  'A meditation instructor',
+  'A business consultant — revenue-leak work at Street Sharkz'
+];
+
 function initAssessment() {
   var form = document.getElementById('assessment-form');
-  var root = document.getElementById('question-root');
   var errors = document.getElementById('form-errors');
   var done = document.getElementById('assessment-done');
-  if (!form || !root) return;
-  renderQuestions(root);
-  form.hidden = false;
+  if (!form || !done) return;
   form.addEventListener('submit', function (event) {
     event.preventDefault();
     var problems = [];
     var answers = [];
-    ASSESSMENT_QUESTIONS.forEach(function (question) {
-      var chosen = form.querySelector('input[name="' + question.id + '"]:checked');
-      var field = document.getElementById('field-' + question.id);
+    var scores = [0, 0, 0, 0, 0];
+    var i;
+    for (i = 0; i < 12; i += 1) {
+      var chosen = form.querySelector('input[name="q' + i + '"]:checked');
+      var field = document.getElementById('field-q' + i);
       if (!chosen) {
         if (field) field.setAttribute('aria-invalid', 'true');
-        problems.push({ id: 'field-' + question.id, message: 'Question ' + question.id.replace('q', '') + ' still needs a choice.' });
-        return;
+        problems.push({ id: 'field-q' + i, message: 'Question ' + (i + 1) + ' still needs a choice.' });
+        answers.push(null);
+        continue;
       }
       if (field) field.removeAttribute('aria-invalid');
-      var label = chosen.parentNode.textContent.trim();
-      answers.push({
-        id: question.id,
-        pillar: question.pillar,
-        value: Number(chosen.value),
-        label: label
-      });
-    });
+      var value = parseInt(chosen.value, 10);
+      answers.push(value);
+      if (PILLAR_OF_Q[i] >= 0) scores[PILLAR_OF_Q[i]] += value;
+    }
     var emailInput = document.getElementById('report-email');
-    var phoneInput = document.getElementById('report-phone');
-    var delivery = form.querySelector('input[name="delivery"]:checked');
     var email = emailInput.value.trim();
-    var phone = phoneInput.value.trim();
     if (!emailOk(email)) {
       emailInput.setAttribute('aria-invalid', 'true');
       problems.push({ id: 'report-email', message: 'Email is required.' });
     } else emailInput.removeAttribute('aria-invalid');
-    if (!delivery) {
-      problems.push({ id: 'delivery-set', message: 'Choose how the report should arrive.' });
-    }
+    var delivery = form.querySelector('input[name="delivery"]:checked');
+    var phone = document.getElementById('report-phone').value.trim();
     if (delivery && delivery.value !== 'Email' && phone.replace(/\D/g, '').length < 7) {
-      phoneInput.setAttribute('aria-invalid', 'true');
+      document.getElementById('report-phone').setAttribute('aria-invalid', 'true');
       problems.push({ id: 'report-phone', message: 'Add a phone number for a text message.' });
-    } else phoneInput.removeAttribute('aria-invalid');
+    } else document.getElementById('report-phone').removeAttribute('aria-invalid');
     if (problems.length) {
       showErrors(errors, problems);
       return;
     }
     errors.hidden = true;
-    var scored = scoreAssessment(answers);
-    var payload = {
-      answers: answers,
-      scores: scored.scores,
-      strongest: scored.strongest,
-      weakest: scored.weakest,
-      contact: {
-        email: email,
-        phone: phone,
-        delivery: delivery.value
-      },
-      source: 'assessment.html'
-    };
-    var button = form.querySelector('[type="submit"]');
-    button.disabled = true;
-    if (!window.PortalAPI) {
-      button.disabled = false;
-      showErrors(errors, [{ id: 'assessment-form', message: 'The desk is not connected yet.' }]);
-      return;
-    }
-    window.PortalAPI.call('submitAssessment', payload).then(function (result) {
-      button.disabled = false;
-      if (!result || !result.ok) {
-        showErrors(errors, [{ id: 'assessment-form', message: (result && result.error) || 'The assessment did not go through.' }]);
-        return;
-      }
-      form.hidden = true;
-      var line = document.getElementById('pillar-result');
-      if (scored.level) {
-        line.textContent = 'On this pass, your five pillars sit level.';
-      } else {
-        line.textContent = 'Strongest pillar: ' + scored.strongest + '. Weakest pillar: ' + scored.weakest + '.';
-      }
-      done.hidden = false;
-      done.focus();
-    }).catch(function () {
-      button.disabled = false;
-      showErrors(errors, [{ id: 'assessment-form', message: 'The assessment did not go through.' }]);
+    var q2 = answers[1];
+    var total = scores.reduce(function (sum, n) { return sum + n; }, 0);
+    var low = 0;
+    var high = 0;
+    scores.forEach(function (v, idx) {
+      if (v < scores[low]) low = idx;
+      if (v > scores[high]) high = idx;
     });
+    var tied = [];
+    scores.forEach(function (v, idx) { if (v === scores[low]) tied.push(idx); });
+    if (tied.length > 1) {
+      var pref = q2 === 0 ? [4] : q2 === 1 ? [0, 1, 2] : q2 === 2 ? [3] : [0, 1, 2, 3, 4];
+      for (var k = 0; k < pref.length; k += 1) {
+        if (tied.indexOf(pref[k]) >= 0) { low = pref[k]; break; }
+      }
+    }
+    var even = scores[high] === scores[low];
+    var band = total <= 10 ? 'Drifting — the leaks are running the boat.'
+      : total <= 20 ? 'Holding — patched in places, leaking in others.'
+      : 'Sharked Up — now it is about scale.';
+    var rows = document.getElementById('map-rows');
+    rows.textContent = '';
+    scores.forEach(function (v, idx) {
+      var row = el('div', 'map-row' + (!even && idx === low ? ' is-low' : ''));
+      row.appendChild(el('span', null, INSTRUMENT_PILLARS[idx]));
+      row.appendChild(el('strong', null, v + '/6'));
+      rows.appendChild(row);
+    });
+    document.getElementById('map-total').textContent = 'Total ' + total + '/30 — ' + band;
+    var diagnostic = document.getElementById('map-diagnostic');
+    diagnostic.textContent = '';
+    if (even) {
+      diagnostic.appendChild(el('p', null, 'Even deck. All five pillars are level at ' + scores[0] + '/6 — no single leak, no single carrier. The diagnostic is the pattern itself: everything moves together, so the first pillar you feed lifts the rest.'));
+    } else {
+      diagnostic.appendChild(el('p', null, 'Your leak is in ' + INSTRUMENT_PILLARS[low] + '. The other four pillars are holding — this one is costing the rest.'));
+      diagnostic.appendChild(el('p', null, 'Your strongest pillar is ' + INSTRUMENT_PILLARS[high] + ' at ' + scores[high] + '/6 — that is the deck the rest of the build stands on.'));
+    }
+    document.getElementById('map-ref').textContent = INSTRUMENT_REF[low];
+    var partner = document.getElementById('map-partner');
+    if (low === 1 || low === 2 || low === 3) {
+      partner.hidden = false;
+      partner.textContent = 'Introductions open with the founding class.';
+    } else partner.hidden = true;
+    document.getElementById('map-offer').textContent = 'The $30 bundle is Sharked Up: The Art of Finesse plus premium beta access. The $50 tier is one of only 100 Founding Member seats, with the private course modules and frameworks and the glow-in-the-dark bracelet.';
+    var payload = {
+      name: document.getElementById('report-name').value.trim(),
+      email: email,
+      phone: phone,
+      delivery: delivery ? delivery.value : 'Email',
+      answers: answers,
+      scores: {
+        hydration: scores[0],
+        nutrition: scores[1],
+        fitness: scores[2],
+        mind: scores[3],
+        economics: scores[4]
+      }
+    };
+    var button = document.getElementById('send-report');
+    var confirm = document.getElementById('confirm-line');
+    button.disabled = true;
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+    function finish(result) {
+      if (result && result.ok) confirm.textContent = 'Your full report is on its way by the delivery you chose.';
+      else confirm.textContent = 'Your map is on this page. Keep it, and start with the path above.';
+    }
+    if (window.PortalAPI) {
+      window.PortalAPI.call('submitAssessment', payload).then(finish).catch(function () { finish(null); });
+    } else finish(null);
   });
 }
 
 function initSeller() {
-  var form = document.getElementById('seller-form');
-  var root = document.getElementById('seller-fields');
-  var errors = document.getElementById('seller-errors');
-  var done = document.getElementById('seller-done');
-  if (!form || !root) return;
-  SELLER_FIELDS.forEach(function (field) {
-    var wrap = el('div', 'field');
-    wrap.id = 'wrap-' + field.id;
-    var label = el('label', null, field.label);
-    label.htmlFor = 'seller-' + field.id;
-    wrap.appendChild(label);
-    var input;
-    if (field.type === 'textarea') {
-      input = document.createElement('textarea');
-    } else if (field.type === 'select') {
-      input = document.createElement('select');
-      var blank = el('option', null, 'Select one');
-      blank.value = '';
-      input.appendChild(blank);
-      (field.options || []).forEach(function (option) {
-        var node = el('option', null, option);
-        node.value = option;
-        input.appendChild(node);
-      });
-    } else {
-      input = document.createElement('input');
-      input.type = field.type;
-    }
-    input.id = 'seller-' + field.id;
-    input.name = field.id;
-    if (field.required) input.required = true;
-    if (field.autocomplete) input.autocomplete = field.autocomplete;
-    wrap.appendChild(input);
-    root.appendChild(wrap);
-  });
-  form.hidden = false;
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    var problems = [];
-    var payload = { source: 'seller.html' };
-    SELLER_FIELDS.forEach(function (field) {
-      var input = document.getElementById('seller-' + field.id);
-      var value = input.value.trim();
-      if (field.required && !value) {
-        input.setAttribute('aria-invalid', 'true');
-        problems.push({ id: 'seller-' + field.id, message: field.label + ' is required.' });
-      } else if (field.type === 'email' && value && !emailOk(value)) {
-        input.setAttribute('aria-invalid', 'true');
-        problems.push({ id: 'seller-' + field.id, message: 'Email needs a real address.' });
-      } else {
-        input.removeAttribute('aria-invalid');
-      }
-      payload[field.id] = value;
-    });
-    if (problems.length) {
-      showErrors(errors, problems);
-      return;
-    }
-    errors.hidden = true;
-    var button = form.querySelector('[type="submit"]');
-    button.disabled = true;
-    if (!window.PortalAPI) {
-      button.disabled = false;
-      showErrors(errors, [{ id: 'seller-form', message: 'The desk is not connected yet.' }]);
-      return;
-    }
-    window.PortalAPI.call(SELLER_CALL, payload).then(function (result) {
-      button.disabled = false;
-      if (!result || !result.ok) {
-        showErrors(errors, [{ id: 'seller-form', message: (result && result.error) || 'The intake did not go through.' }]);
-        return;
-      }
-      form.hidden = true;
-      done.hidden = false;
-      done.focus();
-    }).catch(function () {
-      button.disabled = false;
-      showErrors(errors, [{ id: 'seller-form', message: 'The intake did not go through.' }]);
-    });
-  });
+  return;
 }
 
 function renderGauge(host, you) {
@@ -909,7 +827,8 @@ function renderTable(host, rows, youName) {
   table.className = 'board';
   var head = document.createElement('thead');
   var hr = document.createElement('tr');
-  ['Member', 'Rank', 'Points'].forEach(function (label) {
+  var live = (rows || []).some(function (row) { return row.careerDays != null || row.streak != null || row.rankName; });
+  (live ? ['Member', 'Rank', 'Days', 'Streak'] : ['Member', 'Rank', 'Points']).forEach(function (label) {
     var th = el('th', null, label);
     th.scope = 'col';
     hr.appendChild(th);
@@ -920,9 +839,13 @@ function renderTable(host, rows, youName) {
     var tr = document.createElement('tr');
     if (youName && row.username === youName) tr.className = 'is-you';
     tr.appendChild(el('td', null, row.username || ''));
-    tr.appendChild(el('td', null, row.rank || ''));
-    var pts = el('td', 'pts', row.points == null ? '' : String(row.points));
-    tr.appendChild(pts);
+    tr.appendChild(el('td', null, row.rankName || row.rank || ''));
+    if (live) {
+      tr.appendChild(el('td', 'pts', row.careerDays == null ? '' : String(row.careerDays)));
+      tr.appendChild(el('td', 'pts', row.streak == null ? '' : String(row.streak)));
+    } else {
+      tr.appendChild(el('td', 'pts', row.points == null ? '' : String(row.points)));
+    }
     body.appendChild(tr);
   });
   table.appendChild(head);
@@ -982,6 +905,16 @@ function initPortal() {
       var resources = results[0] || {};
       var drops = results[1] || {};
       var board = results[2] || {};
+      var resourceItems = resources.resources || resources.items || [];
+      var dropItems = drops.drops || drops.items || [];
+      var rows = board.board || board.rows || [];
+      var you = null;
+      rows.forEach(function (row) {
+        if (profile && row.username && row.username === profile.username) {
+          var named = rankByName(row.rankName || row.rank);
+          you = { username: row.username, rank: named ? named.name : (row.rankName || row.rank || '') };
+        }
+      });
       var app = document.getElementById('panel-app');
       if (app) {
         app.textContent = '';
@@ -996,11 +929,12 @@ function initPortal() {
         });
         app.appendChild(list);
         app.appendChild(el('p', null, 'Ninety days. One path.'));
-        (drops.items || []).forEach(function (item) {
+        dropItems.forEach(function (item) {
           var card = el('article', 'drop');
-          card.appendChild(el('p', 'kind', item.when || 'Release'));
+          card.appendChild(el('p', 'kind', item.when || [item.category, item.date].filter(Boolean).join(' · ') || 'Release'));
           card.appendChild(el('h3', null, item.title || 'Release'));
-          if (item.note) card.appendChild(el('p', null, item.note));
+          var note = item.note || item.body;
+          if (note) card.appendChild(el('p', null, note));
           app.appendChild(card);
         });
       }
@@ -1008,9 +942,9 @@ function initPortal() {
       if (learn) {
         learn.textContent = '';
         learn.appendChild(el('h2', null, 'Learn'));
-        (resources.items || []).forEach(function (item) {
+        resourceItems.forEach(function (item) {
           var card = el('article', 'resource');
-          card.appendChild(el('p', 'kind', item.kind || 'Note'));
+          card.appendChild(el('p', 'kind', item.kind || item.type || 'Note'));
           card.appendChild(el('h3', null, item.title || 'Note'));
           if (item.note) card.appendChild(el('p', null, item.note));
           learn.appendChild(card);
@@ -1021,14 +955,14 @@ function initPortal() {
         ladder.textContent = '';
         ladder.appendChild(el('h2', null, 'Leaderboard'));
         var gauge = el('div', 'gauge');
-        renderGauge(gauge, board.you || null);
+        renderGauge(gauge, you || board.you || null);
         ladder.appendChild(gauge);
         var tableHost = el('div');
-        renderTable(tableHost, board.rows || [], profile && profile.username);
+        renderTable(tableHost, rows, profile && profile.username);
         ladder.appendChild(tableHost);
       }
-    }).catch(function () {
-      say('The desk is quiet. Sign in again in a moment.');
+    }).catch(function (err) {
+      say(safeMsg(err && err.message, 'The desk is quiet. Sign in again in a moment.'));
     });
   }
 
@@ -1050,8 +984,8 @@ function initPortal() {
     say('Sending.');
     window.PortalAPI.call('sendMyCode', email).then(function (result) {
       sendButton.disabled = false;
-      if (!result || !result.ok) {
-        say((result && result.error) || 'The code did not send.');
+        if (!result || !result.ok) {
+        say(safeMsg(result && result.error, 'The code did not send.'));
         return;
       }
       codeStep.hidden = false;
@@ -1185,12 +1119,13 @@ function pinHeadline(item) {
 function renderWire(headlines) {
   var track = document.getElementById('wire-track');
   if (!track) return;
+  var items = (headlines || []).map(normalizeHeadline);
   track.textContent = '';
   track.classList.remove('is-on');
   function fill(hidden) {
     var row = el('div', 'wire-row');
     if (hidden) row.setAttribute('aria-hidden', 'true');
-    (headlines || []).forEach(function (item, index) {
+    items.forEach(function (item, index) {
       var button = el('button', 'wire-item');
       button.type = 'button';
       if (item.newest || index === 0) button.classList.add('is-newest');
@@ -1297,7 +1232,21 @@ function renderFounders(videos) {
   (videos || []).forEach(function (item) {
     var block = el('article', 'stack-item');
     block.appendChild(el('h3', null, item.title || 'Clip'));
-    block.appendChild(buildOwnScreen(item));
+    if (item.note) block.appendChild(el('p', null, item.note));
+    var local = item.src || ((item.url && /\.mp4($|\?)/i.test(item.url)) ? item.url : '');
+    if (local) {
+      block.appendChild(buildOwnScreen({ title: item.title, source: 'STREET SHARKZ', src: local }));
+    } else {
+      var href = watchHref(item);
+      if (href) {
+        var link = el('a', 'btn btn-ghost', 'Open the clip');
+        link.href = href;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.appendChild(el('span', 'sr-only', ' (opens in a new tab)'));
+        block.appendChild(link);
+      }
+    }
     host.appendChild(block);
   });
   initScreens(host);
@@ -1377,63 +1326,70 @@ function scheduleRoll(onRoll) {
 function showRoom(pass, profile) {
   var locked = document.getElementById('room-locked');
   var open = document.getElementById('room-open');
-  if (locked) locked.hidden = true;
-  if (open) open.hidden = false;
   var who = document.getElementById('room-who');
-  if (who && profile) {
-    var bits = [];
-    if (profile.username) bits.push(profile.username);
-    if (profile.tier) bits.push(profile.tier);
-    var seat = seatLabel(profile.seat);
-    if (seat) bits.push(seat);
-    who.textContent = bits.join(' · ');
+  function lock() {
+    if (locked) locked.hidden = false;
+    if (open) open.hidden = true;
   }
-  var room = { newsVideos: [], videos: [], headlines: [] };
-  function paint() {
-    var list = room.newsVideos || [];
-    if (!list.length) {
+  function paint(list) {
+    if (!list || !list.length) {
       renderBigScreen(null);
       return;
     }
     var index = ((roomSlot % list.length) + list.length) % list.length;
     renderBigScreen(list[index]);
   }
-  function roll() {
-    roomSlot += 1;
-    window.PortalAPI.call('getRoomData', pass).then(function (fresh) {
-      if (fresh && fresh.ok && fresh.newsVideos) room.newsVideos = fresh.newsVideos;
-      if (fresh && fresh.ok && fresh.headlines) {
-        room.headlines = fresh.headlines;
-        renderWire(room.headlines);
-      }
-      paint();
-    }).catch(function () { paint(); });
-  }
-  Promise.all([
-    window.PortalAPI.call('getRoomData', pass),
-    window.PortalAPI.call('getDrops', pass),
-    window.PortalAPI.call('getBoard', pass),
-    window.PortalAPI.call('getLeaderboard', pass)
-  ]).then(function (results) {
-    var data = results[0] || {};
-    if (!data.ok) {
-      if (locked) locked.hidden = false;
-      if (open) open.hidden = true;
-      return;
+  var news = [];
+  function apply(data) {
+    if (!data || !data.ok) { lock(); return; }
+    if (locked) locked.hidden = true;
+    if (open) open.hidden = false;
+    if (who) {
+      var bits = [];
+      var person = data.name || (profile && profile.name) || data.username || (profile && profile.username) || '';
+      if (person) bits.push(person);
+      if (data.seat || (profile && profile.seat)) bits.push(seatLabel(data.seat || profile.seat));
+      who.textContent = bits.filter(Boolean).join(' · ');
     }
-    room = data;
-    roomSlot = Number(data.rotationSlot) || 0;
+    if (typeof data.rotationSlot === 'number' && isFinite(data.rotationSlot)) roomSlot = data.rotationSlot;
+    news = (data.newsVideos || []).map(normalizeNews);
     renderWire(data.headlines || []);
-    paint();
+    paint(news);
     renderFounders(data.videos || []);
-    renderReleases((results[1] && results[1].items) || []);
-    renderFloor((results[2] && results[2].posts) || []);
-    renderRoomLadder(results[3] || {});
-    scheduleRoll(roll);
-  }).catch(function () {
-    if (locked) locked.hidden = false;
-    if (open) open.hidden = true;
-  });
+    renderReleases((data.drops || []).map(function (item) {
+      return {
+        title: item.title,
+        when: item.when || [item.category, item.date].filter(Boolean).join(' · '),
+        note: item.note || item.body
+      };
+    }));
+    renderFloor((data.posts || []).map(normalizePost));
+    var rows = data.board || [];
+    var you = null;
+    var name = profile && profile.username;
+    rows.forEach(function (row) {
+      if (name && row.username === name) {
+        var named = rankByName(row.rankName || row.rank);
+        you = { username: row.username, rank: named ? named.name : '' };
+      }
+    });
+    renderRoomLadder({ rows: rows, you: you });
+  }
+  function roll() {
+    window.PortalAPI.call('getRoomData', pass).then(function (fresh) {
+      if (fresh && fresh.ok) {
+        if (typeof fresh.rotationSlot === 'number' && isFinite(fresh.rotationSlot)) roomSlot = fresh.rotationSlot;
+        else roomSlot += 1;
+        news = (fresh.newsVideos || []).map(normalizeNews);
+        renderWire(fresh.headlines || []);
+      } else roomSlot += 1;
+      paint(news);
+    }).catch(function () { roomSlot += 1; paint(news); });
+  }
+  window.PortalAPI.call('getRoomData', pass).then(function (data) {
+    apply(data);
+    if (data && data.ok) scheduleRoll(roll);
+  }).catch(function () { lock(); });
 
   var floorForm = document.getElementById('floor-form');
   if (floorForm && !floorForm.dataset.bound) {
@@ -1456,7 +1412,7 @@ function showRoom(pass, profile) {
         if (note) note.textContent = 'Posted.';
         return window.PortalAPI.call('getBoard', pass);
       }).then(function (board) {
-        if (board && board.posts) renderFloor(board.posts);
+        if (board && board.posts) renderFloor(board.posts.map(normalizePost));
       }).catch(function () {
         if (note) note.textContent = 'The floor did not take that.';
       });
@@ -1465,6 +1421,16 @@ function showRoom(pass, profile) {
 }
 
 function initRoom() {
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var fromQuery = params.get('pass');
+    if (fromQuery) {
+      savePass(fromQuery);
+      params.delete('pass');
+      var qs = params.toString();
+      window.history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
+    }
+  } catch (ignore) {}
   var pass = readPass();
   var profile = readProfile();
   var out = document.getElementById('room-out');
@@ -1484,12 +1450,12 @@ function boot() {
   initNav();
   initReveal();
   initSound();
+  initScreens(document);
+  initFounding();
   if (page === 'home') {
     initHero();
     initTicker();
-    initScreens(document);
     initInvite();
-    initFounding();
   }
   if (page === 'assessment') initAssessment();
   if (page === 'seller') initSeller();

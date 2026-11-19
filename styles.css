@@ -862,7 +862,10 @@ textarea { min-height: 120px; resize: vertical; }
   .pillar, .door, .pack, .card { transition: transform 500ms var(--ease), border-color 500ms var(--ease); }
 }
 
-@media (max-width: 1080px) {
+.map-row { display: flex; justify-content: space-between; gap: 1rem; padding: 0.45rem 0; border-bottom: 1px solid rgba(199, 208, 217, 0.14); font-family: var(--mono); font-size: 0.92rem; }
+.map-row.is-low { color: var(--gold-2); }
+
+@media (max-width: 1280px) {
   .nav-toggle { display: inline-flex; }
   .site-header { position: fixed; }
   #site-nav {

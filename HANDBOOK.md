@@ -20,7 +20,7 @@ The public pages speak as Street Sharkz only. Prices stay exact. The only result
 | `404.html` | Missing-page chart. |
 | `styles.css` | All of the look: abyss, gold, silver, cyan, type, motion. |
 | `main.js` | Motion, videos, pop-ups, forms, portal, and the Back Door. |
-| `api.js` | The stub engine. Fin replaces this whole file. |
+| `api.js` | The live engine. The address stays in this file only. |
 | `assets/img/` | The official hexagon mark and the Skywalker crest, untouched, plus compressed `.webp` copies beside them. |
 | `assets/video/` | App clips, captions, and `manifest.json`. |
 | `assets/fonts/` | Cinzel, Inter, and IBM Plex Mono, with their licenses. |
@@ -39,13 +39,7 @@ Then open `http://127.0.0.1:8080/`.
 
 Use a local server. Opening the HTML files straight from a folder can block the small checks the pages make.
 
-While `api.js` is still the stub:
-
-- The browser console says the stub is in mock mode. That note stays in the console. It is not printed on the page.
-- No email is sent.
-- On the Members Portal, type any real-looking email and press **Email me my code**. Then type any 6 digits and press **Confirm code**.
-- You land on the member desk as Preview Member. The Back Door opens from the last tab.
-- Nothing on the page shows a pass or a private app address. The stub's address field is empty on purpose.
+`api.js` is the live engine file. Do not edit it, and do not paste its address into any page. A real code from **Email me my code** opens the desk. The pass stays in session storage. It is never written on the page, and it is not left in the address bar.
 
 Do not merge this into the live branch until you have looked at the preview and said so.
 
@@ -58,35 +52,23 @@ The paid doors and the Peak Performance opener already point at these files:
 - `assets/video/app-build-your-profile.mp4` — $50 founding, landscape, "BUILD YOUR PROFILE"
 - `assets/video/app-informative.mp4` — opens Peak Performance, landscape, "INFORMATIVE"
 
-Until those files exist, each frame holds a branded still: the hexagon mark, a gold hairline, and the line for that clip. That is intentional.
+Those four files are in `assets/video/` and named in `assets/video/manifest.json`, so the frames play them. The clip stays muted, loops, and plays only while it is on screen. **Sound on** turns audio on for that one clip. Vertical clips sit in the phone frame. The founding clip and the Peak Performance opener are wide.
 
-When a file is ready:
-
-1. Put the mp4 in `assets/video/` with the exact name above.
-2. Open `assets/video/manifest.json` and add that name to the `present` list, for example `"app-90days.mp4"`.
-3. Refresh. The clip stays muted, loops, and plays only while it is on screen. **Sound on** turns audio on for that one clip. Vertical clips sit in the phone frame.
-
-If the name is not in `manifest.json`, the page keeps the still and does not request the file.
+If you replace a file, keep the same name, or change the name in both the page and `manifest.json`. If the name is not in `manifest.json`, the page keeps the still and does not request the file.
 
 Captions live next to each clip as a `.vtt` file. Replace the text when the real words are locked.
 
-The Back Door uses paths that `getRoomData` returns (`bridge-note.mp4`, `founders-table.mp4`, `keel-and-course.mp4` in the stub). Same rule: add the file, add its name to `manifest.json`, or change the path in the data Fin sends. A private investor pitch is not on this site and should not be added.
+The Back Door plays a founder clip in the frame when `getRoomData` gives a local mp4 path. A news item shows its source bug and title and opens the source in a new tab. There is no embedded player. A private investor pitch is not on this site.
 
-## How to swap the 12 questions
+## How the assessment is scored
 
-Open `main.js`. At the top, `ASSESSMENT_QUESTIONS` is marked `TODO-FIN`. Replace that array with the live 12 questions, same order. Each item needs an `id`, a `pillar` (`Hydration`, `Fitness`, `Nutrition`, `Mind`, or `Economics`), and a `prompt`.
+The twelve questions are written in `assessment.html`. Questions 1 and 2 are qualifiers. Questions 3 through 12 score 0–3 into Hydration, Nutrition, Fitness, Mind, and Economics, two questions each. The page sends `submitAssessment` with `name`, `email`, `phone`, `delivery`, `answers`, and `scores` (`hydration`, `nutrition`, `fitness`, `mind`, `economics`). Leave that shape alone so the report mailer keeps reading it.
 
-`ASSESSMENT_SCALE` is the 1–5 set of choices. Replace it if the live form uses different choices.
+The seller intake fields were not in the live engine. `sharkonomicz.html` carries the three packs and the office email for a systems diagnostic. Do not invent a new engine call for that form.
 
-`scoreAssessment` averages each pillar and names the strongest and weakest. Replace that function if the live form scores another way. The page sends the answers, the scores, the strongest pillar, the weakest pillar, and the contact step through `PortalAPI.call('submitAssessment', payload)`.
+## The engine file
 
-## How to swap the seller intake
-
-In the same file, `SELLER_FIELDS` is marked `TODO-FIN`. Replace it with the live fields, same order. `SELLER_CALL` is the name `submitSellerIntake`. If Fin's engine uses another name, change that one line.
-
-## How to replace api.js
-
-Fin will send the real `api.js`. Replace the stub with that file. Do not copy the engine address into a page.
+`api.js` is already the live file. Do not replace it unless Fin sends a new one, and do not copy its address into a page.
 
 The pages call only this:
 
@@ -141,12 +123,8 @@ When you are ready:
 
 The Pages site publishes from the default branch of this repo after a merge. This preview branch is not that branch until you approve it.
 
-## Still waiting on Fin
+## Still open
 
-- The real `api.js` (the stub has no endpoint).
-- The 12 verbatim assessment questions and the live scoring, if it differs.
-- The live seller-intake fields and the confirmed function name.
-- The four app mp4s, plus any Back Door clips and news thumbnails you want in the frames.
-- Caption text that matches the finished audio.
-
-Until those arrive, the pages still preview: stills hold the video frames, placeholder questions run the assessment, and the stub opens the portal and the Back Door.
+- Seller-intake fields were not in the live engine, so there is no intake form. The Lead Engine packs and the office email cover that ask.
+- News thumbnails are not files in the repo. The big screen shows the source bug, the title, and a link out until `getRoomData` sends a local thumbnail path.
+- A founder clip plays in the frame only when the engine returns a local mp4. Anything else opens as a link. There is no embedded player.
