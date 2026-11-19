@@ -30,6 +30,9 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .crew-hold #crew-join { display: none; }
+    #crew-form { display: none; }
+    body.crew-open #crew-form { display: block; }
+    body.crew-open #crew-join-cta { display: none; }
     body.page-room [hidden] { display: none !important; }
     .crew-join.section { position: relative; padding: 1.35rem 0 0.55rem; overflow-x: clip; }
     .crew-hp {
@@ -62,6 +65,12 @@
       <p class="eyebrow">The crew roll</p>
       <h2>Join the crew</h2>
       <p class="lede-left">We keep the wire and the screen dark until you are on the roll. The daily work below stays on the deck for everyone.</p>
+      <div id="crew-join-cta">
+        <p class="cta-row">
+          <button class="btn btn-solid" type="button" id="crew-open-form">Join the crew</button>
+          <a class="text-link" href="#crew-join" id="crew-open-already">Already crew?</a>
+        </p>
+      </div>
       <form id="crew-form" class="gate" novalidate>
         <div id="crew-join-fields">
           <div class="field">
@@ -866,6 +875,31 @@
       clearCrew();
       showForm();
     }
+  })();
+  </script>
+  <script>
+  (function () {
+    function openForm(toResend) {
+      document.body.classList.add("crew-open");
+      if (toResend) {
+        var a = document.getElementById("crew-already");
+        if (a) a.click();
+      } else {
+        var n = document.getElementById("crew-name");
+        if (n) n.focus();
+      }
+      var s = document.getElementById("crew-join");
+      if (s && s.scrollIntoView) s.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    var joinBtn = document.getElementById("crew-open-form");
+    if (joinBtn) joinBtn.addEventListener("click", function () { openForm(false); });
+    var alreadyLink = document.getElementById("crew-open-already");
+    if (alreadyLink) alreadyLink.addEventListener("click", function (e) { e.preventDefault(); openForm(true); });
+    ["crew-leave", "crew-leave-locked"].forEach(function (id) {
+      var b = document.getElementById(id);
+      if (b) b.addEventListener("click", function () { document.body.classList.remove("crew-open"); });
+    });
+    if (window.location.hash === "#join") openForm(false);
   })();
   </script>
 </body>
