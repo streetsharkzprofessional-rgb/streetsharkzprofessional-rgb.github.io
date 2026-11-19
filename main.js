@@ -240,7 +240,7 @@ function initReveal() {
       entry.target.classList.add('in');
       io.unobserve(entry.target);
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0, rootMargin: '0px 0px -6% 0px' });
   Array.prototype.forEach.call(nodes, function (node) { io.observe(node); });
 }
 
