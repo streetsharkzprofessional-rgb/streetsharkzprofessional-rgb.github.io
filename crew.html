@@ -30,6 +30,9 @@
   <link rel="stylesheet" href="styles.css">
   <style>
     .crew-hold #crew-join { display: none; }
+    #crew-form { display: none; }
+    body.crew-open #crew-form { display: block; }
+    body.crew-open #crew-join-cta { display: none; }
     body.page-room [hidden] { display: none !important; }
     .crew-join.section { position: relative; padding: 1.35rem 0 0.55rem; overflow-x: clip; }
     .crew-hp {
@@ -53,6 +56,7 @@
     .wire.is-locked { position: static; }
     .page-room .room-actions { flex-wrap: wrap; }
     #crew-greet { color: var(--gold-2); }
+    #crew-status:empty { min-height: 0; margin: 0; }
   </style>
 </head>
 <body class="page-room" data-page="crew">
@@ -60,8 +64,14 @@
   <section class="section crew-join" id="crew-join">
     <div class="narrow">
       <p class="eyebrow">The crew roll</p>
-      <h2>Join the crew</h2>
+      <h2 id="join">Join the crew</h2>
       <p class="lede-left">We keep the wire and the screen dark until you are on the roll. The daily work below stays on the deck for everyone.</p>
+      <div id="crew-join-cta">
+        <p class="cta-row">
+          <button class="btn btn-solid" type="button" id="crew-open-form" aria-expanded="false" aria-controls="crew-form">Join the crew</button>
+          <a class="text-link" href="#join" id="crew-open-already" aria-expanded="false" aria-controls="crew-form">Already crew?</a>
+        </p>
+      </div>
       <form id="crew-form" class="gate" novalidate>
         <div id="crew-join-fields">
           <div class="field">
@@ -126,9 +136,9 @@
             <button class="btn btn-ghost" type="button" id="crew-resend-code">Resend code</button>
           </p>
         </div>
-        <p id="crew-status" class="status" role="status" aria-live="polite"></p>
-        <p id="crew-leave-row" hidden><button class="text-link" type="button" id="crew-leave-locked">Leave the deck</button></p>
       </form>
+      <p id="crew-status" class="status" role="status" aria-live="polite"></p>
+      <p id="crew-leave-row" hidden><button class="text-link" type="button" id="crew-leave-locked">Leave the deck</button></p>
     </div>
   </section>
   <div class="wire is-locked" id="crew-wire">
@@ -462,8 +472,37 @@
       showJoinStep();
       say("");
       showForm();
+      collapseGate();
+      var opener = document.getElementById("crew-open-form");
+      if (opener) opener.focus();
+    }
+    function setExpanded(open) {
+      ["crew-open-form", "crew-open-already"].forEach(function (id) {
+        var node = document.getElementById(id);
+        if (node) node.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
+    function openGate(mode) {
+      document.body.classList.add("crew-open");
+      setExpanded(true);
+      if (mode === "resend") {
+        if (joinFields) joinFields.hidden = true;
+        if (resendStep) resendStep.hidden = false;
+        if (codeStep) codeStep.hidden = true;
+        var input = document.getElementById("crew-resend-email");
+        if (input) {
+          if (!input.value) input.value = pendingEmail || "";
+          input.focus();
+        }
+        return;
+      }
+      showJoinStep();
       var name = document.getElementById("crew-name");
       if (name) name.focus();
+    }
+    function collapseGate() {
+      document.body.classList.remove("crew-open");
+      setExpanded(false);
     }
     function unlock(alias) {
       var join = document.getElementById("crew-join");
@@ -636,6 +675,7 @@
           showJoinStep();
           showForm();
           say("The roll needs a fresh sign-in.");
+          openFromHash();
           return;
         }
         if (engineTrouble(data)) {
@@ -859,6 +899,24 @@
     if (purposeInput) purposeInput.addEventListener("input", function () {
       if (/[\r\n]/.test(purposeInput.value)) purposeInput.value = purposeInput.value.replace(/[\r\n]+/g, " ");
     });
+
+    var openForm = document.getElementById("crew-open-form");
+    if (openForm) openForm.addEventListener("click", function () { openGate("join"); });
+    var openAlready = document.getElementById("crew-open-already");
+    if (openAlready) openAlready.addEventListener("click", function (event) {
+      if (event) event.preventDefault();
+      openGate("resend");
+    });
+    function openFromHash() {
+      if (window.location.hash !== "#join") return;
+      if (readCrew()) return;
+      var join = document.getElementById("crew-join");
+      if (!join || join.hidden) return;
+      openGate("join");
+    }
+    window.addEventListener("hashchange", openFromHash);
+    if (document.readyState === "complete") openFromHash();
+    else window.addEventListener("load", openFromHash);
 
     var record = readCrew();
     if (record) loadWire(record);
