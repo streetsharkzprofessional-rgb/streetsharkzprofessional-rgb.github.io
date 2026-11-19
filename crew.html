@@ -31,7 +31,19 @@
   <style>
     .crew-hold #crew-join { display: none; }
     body.page-room [hidden] { display: none !important; }
-    .crew-join.section { padding: 1.35rem 0 0.55rem; }
+    .crew-join.section { position: relative; padding: 1.35rem 0 0.55rem; overflow-x: clip; }
+    .crew-hp {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 1px;
+      height: 1px;
+      min-height: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
     .crew-join h2 { max-width: none; }
     .crew-join .choice { align-items: flex-start; height: auto; }
     .crew-join .choice input { margin-top: 0.35rem; }
@@ -88,6 +100,7 @@
             <input id="crew-texts" name="textOptIn" type="checkbox" value="yes">
             <span>Text me at this line about crew opportunities and introductions. Optional.</span>
           </label>
+          <input id="crew-hp" name="hp" class="crew-hp" type="text" aria-hidden="true" tabindex="-1" autocomplete="off" maxlength="200">
           <p class="cta-row">
             <button class="btn btn-solid" type="submit" id="crew-join-btn">Join the crew.</button>
           </p>
@@ -657,6 +670,7 @@
       var purposeInput = document.getElementById("crew-purpose");
       var emailInput = document.getElementById("crew-email");
       var phoneInput = document.getElementById("crew-phone");
+      var hpInput = document.getElementById("crew-hp");
       var agree = document.getElementById("crew-agree");
       var texts = document.getElementById("crew-texts");
       var name = clean(nameInput && nameInput.value);
@@ -665,6 +679,8 @@
       var purpose = clean(purposeInput && purposeInput.value);
       var email = clean(emailInput && emailInput.value);
       var phone = clean(phoneInput && phoneInput.value);
+      var hp = clean(hpInput && hpInput.value);
+      if (hp.length > 200) hp = hp.slice(0, 200);
       if (!name || name.length > CAP.name) return fail(nameInput, "Add your name.");
       if (alias.length < 2 || alias.length > CAP.alias) return fail(aliasInput, "The alias needs 2 to 24 characters.");
       if (!industry) return fail(industryInput, "Add your industry.");
@@ -682,6 +698,7 @@
         purpose: purpose,
         email: email,
         phone: phone,
+        hp: hp,
         agree18Terms: true,
         textOptIn: !!(texts && texts.checked)
       };
