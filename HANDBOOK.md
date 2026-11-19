@@ -22,6 +22,7 @@ The public pages speak as Street Sharkz only. Prices stay exact. The only result
 | `main.js` | Motion, videos, pop-ups, forms, portal, and the Back Door. |
 | `api.js` | The live engine. The address stays in this file only. |
 | `assets/img/` | The official hexagon mark and the Skywalker crest, untouched, plus compressed `.webp` copies beside them. |
+| `assets/img/captain/` | Photographs of the Captain. Originals are stored without location data. The strategy portrait used on the pages is a tight crop so the board behind him is not readable. |
 | `assets/video/` | App clips, captions, and `manifest.json`. |
 | `assets/fonts/` | Cinzel, Inter, and IBM Plex Mono, with their licenses. |
 
