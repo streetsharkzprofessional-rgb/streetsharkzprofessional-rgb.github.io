@@ -887,18 +887,23 @@ textarea { min-height: 120px; resize: vertical; }
 }
 .bug {
   position: absolute;
-  top: 12px;
-  left: 12px;
+  top: 10px;
+  left: 10px;
   z-index: 2;
   font-family: var(--mono);
-  font-size: 0.68rem;
+  font-size: 0.58rem;
   letter-spacing: 0.08em;
   color: var(--gold-2);
   background: rgba(5, 11, 20, 0.82);
   border: 1px solid rgba(201, 162, 39, 0.7);
-  padding: 0.4rem 0.55rem;
+  padding: 0.28rem 0.45rem;
+  max-width: 62%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
 }
-.screen-title { font-family: var(--display); font-size: 1.45rem; margin-top: 0.85rem; letter-spacing: 0.03em; }
+.screen-title { font-family: var(--display); font-size: 1.05rem; margin-top: 0.7rem; letter-spacing: 0.03em; }
 .roll { margin-top: 0.4rem; color: var(--silver); font-family: var(--mono); font-size: 0.82rem; }
 .stack-item { margin-top: 1rem; }
 .stack-item h3 { font-family: var(--display); font-size: 1.2rem; margin-bottom: 0.5rem; }
