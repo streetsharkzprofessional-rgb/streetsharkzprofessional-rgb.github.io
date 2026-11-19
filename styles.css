@@ -372,7 +372,7 @@ h1, h2, .display {
   mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 .ticker-track { display: flex; width: max-content; }
-.ticker-track.is-on { animation: ticker 92s linear infinite; }
+.ticker-track.is-on { animation: ticker 160s linear infinite; }
 .ticker:hover .ticker-track, .ticker:focus-within .ticker-track { animation-play-state: paused; }
 .ticker-row { display: flex; margin: 0; padding: 0; }
 .ticker-row li {
@@ -806,7 +806,7 @@ textarea { min-height: 120px; resize: vertical; }
 }
 .wire-viewport { overflow: hidden; }
 .wire-track { display: flex; width: max-content; }
-.wire-track.is-on { animation: wiremove 108s linear infinite; }
+.wire-track.is-on { animation: wiremove 180s linear infinite; }
 .wire:hover .wire-track, .wire.is-pinned .wire-track, .wire:focus-within .wire-track { animation-play-state: paused; }
 .wire-row { display: flex; }
 .wire-item {
