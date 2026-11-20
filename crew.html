@@ -158,8 +158,10 @@
         <p class="lede-left">The wire and the screen open once you are crew. The daily work stays on the deck.</p>
         <p class="lede-left" id="crew-greet" hidden></p>
       </div>
-      <div class="room-actions">
+            <div class="room-actions">
         <button class="btn btn-ghost" type="button" id="crew-leave" hidden>Leave the deck</button>
+        <a class="btn btn-ghost" href="https://app.streetsharkz.com" id="crew-app-btn" hidden>Open the App</a>
+        <a class="btn btn-solid" href="room.html" id="crew-backdoor-btn" hidden>Back Door — Founders</a>
         <a class="btn btn-ghost" href="assessment.html">Free Assessment</a>
         <a class="btn btn-solid" href="portal.html">Members Portal</a>
       </div>
@@ -468,8 +470,12 @@
       if (leave) leave.hidden = true;
       noteStoredPass();
     }
-    function lockDown() {
+        function lockDown() {
       if (rollTimer) { clearTimeout(rollTimer); rollTimer = 0; }
+      var appBtn2 = document.getElementById("crew-app-btn");
+      if (appBtn2) appBtn2.hidden = true;
+      var bd2 = document.getElementById("crew-backdoor-btn");
+      if (bd2) bd2.hidden = true;
       clearCrew();
       pendingEmail = "";
       pendingAlias = "";
@@ -483,13 +489,15 @@
       var name = document.getElementById("crew-name");
       if (name) name.focus();
     }
-    function unlock(alias) {
+        function unlock(alias) {
       var join = document.getElementById("crew-join");
       var greet = document.getElementById("crew-greet");
       var leave = document.getElementById("crew-leave");
       var row = document.getElementById("crew-leave-row");
+      var appBtn = document.getElementById("crew-app-btn");
       if (join) join.hidden = true;
       if (row) row.hidden = true;
+      if (appBtn) appBtn.hidden = false;
       if (greet) {
         greet.hidden = false;
         greet.textContent = "Welcome aboard, " + (alias || "crew");
@@ -664,7 +672,11 @@
           quietFail(data.error === "rate_limited" ? SIGNUP_ERRORS.rate_limited : RIGGING);
           return;
         }
-        unlock(record.alias || plain(data.alias) || "crew");
+                unlock(record.alias || plain(data.alias) || "crew");
+        if (data.isFounder) {
+          var bd = document.getElementById("crew-backdoor-btn");
+          if (bd) bd.hidden = false;
+        }
         renderWire(data.headlines);
         renderScreen(data);
         scheduleRoll(data);
