@@ -1021,25 +1021,11 @@ function initPortal() {
 
   function loadDesk(pass, profile) {
     if (!window.PortalAPI || !pass) return;
-    Promise.all([
-      window.PortalAPI.call('getResources', pass),
-      window.PortalAPI.call('getDrops', pass),
-      window.PortalAPI.call('getLeaderboard', pass)
-    ]).then(function (results) {
-      var resources = results[0] || {};
-      var drops = results[1] || {};
-      var board = results[2] || {};
+    // Each panel renders the moment its own data lands — the desk never
+    // waits on the slowest call (Fin, 2026-11-19 speed fix).
+    window.PortalAPI.call('getResources', pass).then(function (resources) {
+      resources = resources || {};
       var resourceItems = resources.resources || resources.items || [];
-      var dropItems = drops.drops || drops.items || [];
-      var rows = board.board || board.rows || [];
-      var you = null;
-      rows.forEach(function (row) {
-        if (profile && row.username && row.username === profile.username) {
-          var named = rankByName(row.rankName || row.rank);
-          you = { username: row.username, rank: named ? named.name : (row.rankName || row.rank || '') };
-        }
-      });
-      renderAppPanel(dropItems);
       var learn = document.getElementById('panel-learn');
       if (learn) {
         learn.textContent = '';
@@ -1052,6 +1038,21 @@ function initPortal() {
           learn.appendChild(card);
         });
       }
+    }).catch(function () {});
+    window.PortalAPI.call('getDrops', pass).then(function (drops) {
+      drops = drops || {};
+      renderAppPanel(drops.drops || drops.items || []);
+    }).catch(function () {});
+    window.PortalAPI.call('getLeaderboard', pass).then(function (board) {
+      board = board || {};
+      var rows = board.board || board.rows || [];
+      var you = null;
+      rows.forEach(function (row) {
+        if (profile && row.username && row.username === profile.username) {
+          var named = rankByName(row.rankName || row.rank);
+          you = { username: row.username, rank: named ? named.name : (row.rankName || row.rank || '') };
+        }
+      });
       var ladder = document.getElementById('panel-ladder');
       if (ladder) {
         ladder.textContent = '';
@@ -1063,9 +1064,7 @@ function initPortal() {
         renderTable(tableHost, rows, profile && profile.username);
         ladder.appendChild(tableHost);
       }
-    }).catch(function (err) {
-      say(safeMsg(err && err.message, 'The desk is quiet. Sign in again in a moment.'));
-    });
+    }).catch(function () {});
   }
 
   var existing = readPass();
@@ -1469,8 +1468,8 @@ function showRoom(pass, profile) {
     renderBigScreen(list[index]);
   }
   var news = [];
-  function apply(data) {
-    if (!data || !data.ok) { lock(); return; }
+  var screenSupported = true;
+  function applyScreen(data) {
     if (locked) locked.hidden = true;
     if (open) open.hidden = false;
     if (who) {
@@ -1485,15 +1484,19 @@ function showRoom(pass, profile) {
     renderWire(data.headlines || []);
     paint(news);
     renderFounders(data.videos || []);
-    renderReleases((data.drops || []).map(function (item) {
+  }
+  function applyFloor(posts) { renderFloor((posts || []).map(normalizePost)); }
+  function applyReleases(drops) {
+    renderReleases((drops || []).map(function (item) {
       return {
         title: item.title,
         when: item.when || [item.category, item.date].filter(Boolean).join(' · '),
         note: item.note || item.body
       };
     }));
-    renderFloor((data.posts || []).map(normalizePost));
-    var rows = data.board || [];
+  }
+  function applyLadder(rows) {
+    rows = rows || [];
     var you = null;
     var name = profile && profile.username;
     rows.forEach(function (row) {
@@ -1504,8 +1507,27 @@ function showRoom(pass, profile) {
     });
     renderRoomLadder({ rows: rows, you: you });
   }
+  function apply(data) {
+    if (!data || !data.ok) { lock(); return; }
+    applyScreen(data);
+    applyReleases(data.drops || []);
+    applyFloor(data.posts || []);
+    applyLadder(data.board || []);
+  }
+  function loadRoomExtras() {
+    window.PortalAPI.call('getBoard', pass).then(function (board) {
+      if (board && board.ok) applyFloor(board.posts || []);
+    }).catch(function () {});
+    window.PortalAPI.call('getDrops', pass).then(function (dropsRes) {
+      if (dropsRes && dropsRes.ok) applyReleases(dropsRes.drops || []);
+    }).catch(function () {});
+    window.PortalAPI.call('getLeaderboard', pass).then(function (leadRes) {
+      if (leadRes && leadRes.ok) applyLadder((leadRes.board || []).slice(0, 10));
+    }).catch(function () {});
+  }
   function roll() {
-    window.PortalAPI.call('getRoomData', pass).then(function (fresh) {
+    var fn = screenSupported ? 'getRoomScreen' : 'getRoomData';
+    window.PortalAPI.call(fn, pass).then(function (fresh) {
       if (fresh && fresh.ok) {
         if (typeof fresh.rotationSlot === 'number' && isFinite(fresh.rotationSlot)) roomSlot = fresh.rotationSlot;
         else roomSlot += 1;
@@ -1515,10 +1537,24 @@ function showRoom(pass, profile) {
       paint(news);
     }).catch(function () { roomSlot += 1; paint(news); });
   }
-  window.PortalAPI.call('getRoomData', pass).then(function (data) {
-    apply(data);
-    if (data && data.ok) scheduleRoll(roll);
-  }).catch(function () { lock(); });
+  function bootFull() {
+    window.PortalAPI.call('getRoomData', pass).then(function (data) {
+      apply(data);
+      if (data && data.ok) scheduleRoll(roll);
+    }).catch(function () { lock(); });
+  }
+  window.PortalAPI.call('getRoomScreen', pass).then(function (data) {
+    if (data && data.ok) {
+      applyScreen(data);
+      loadRoomExtras();
+      scheduleRoll(roll);
+    } else if (data && /Unknown function/.test(data.error || '')) {
+      screenSupported = false;
+      bootFull();
+    } else {
+      lock();
+    }
+  }).catch(function () { bootFull(); });
 
   var floorForm = document.getElementById('floor-form');
   if (floorForm && !floorForm.dataset.bound) {
