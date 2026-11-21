@@ -282,8 +282,8 @@ function initHero() {
     for (i = 0; i < 4; i += 1) {
       var x = (width * (0.12 + i * 0.22)) + Math.sin(t + i) * 18;
       var grad = ctx.createLinearGradient(x, 0, x + 30, height * 0.72);
-      grad.addColorStop(0, 'rgba(232, 200, 90, 0.045)');
-      grad.addColorStop(1, 'rgba(232, 200, 90, 0)');
+      grad.addColorStop(0, 'rgba(217, 225, 233, 0.045)');
+      grad.addColorStop(1, 'rgba(217, 225, 233, 0)');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.moveTo(x, 0);
