@@ -1239,3 +1239,8 @@ textarea { min-height: 120px; resize: vertical; }
 .path-steps h3 { margin: 0.35rem 0 0.45rem; }
 .path-steps p { margin: 0 0 0.9rem; }
 @media (max-width: 800px) { .path-steps { grid-template-columns: 1fr; } }
+
+/* Preview 2026-11-23: the book beside the bundle's app screen */
+.door-media { display: flex; align-items: center; justify-content: center; gap: 0.85rem; }
+.door-media .screen-phone { width: min(225px, 60%); margin: 0.4rem 0 0.2rem; }
+.door-book { width: min(105px, 30%); height: auto; border-radius: 6px; border: 1px solid rgba(217, 225, 233, 0.5); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); }
