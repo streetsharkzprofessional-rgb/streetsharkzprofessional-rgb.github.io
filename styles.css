@@ -1254,6 +1254,7 @@ textarea { min-height: 120px; resize: vertical; }
 .crew-app img { width: 76px; height: 76px; border-radius: 18px; border: 1px solid var(--line); }
 .crew-app:hover, .crew-app:focus { color: var(--silver-2); }
 .crew-apps + main .hero { padding-top: 2.5rem; }
+@media (max-width: 1280px) { .crew-apps { margin-top: 11rem; } }
 /* Social row (footer, all pages) — Captain's order 2026-11-24 */
 .social-row { display: flex; gap: 1rem; align-items: center; padding: 0.9rem 0 1.1rem; }
 .social-link { color: var(--steel); display: inline-flex; }
