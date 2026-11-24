@@ -1246,13 +1246,14 @@ textarea { min-height: 120px; resize: vertical; }
 .door-book { width: min(105px, 30%); height: auto; border-radius: 6px; border: 1px solid rgba(217, 225, 233, 0.5); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35); }
 
 /* Crew apps box (home, top) — Captain's order 2026-11-24 */
-.crew-apps { margin: 1.4rem auto 0; max-width: 880px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, var(--abyss-3), var(--abyss-2)); padding: 1rem 1.2rem; display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; justify-content: center; }
+.crew-apps { margin: 8.6rem auto 0; max-width: 880px; border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(180deg, var(--abyss-3), var(--abyss-2)); padding: 1rem 1.2rem; display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; justify-content: center; }
 .crew-apps-label { font-family: var(--display); letter-spacing: 0.08em; color: var(--silver-2); font-size: 1.05rem; margin: 0; text-transform: uppercase; }
 .crew-apps-arrow { color: var(--cyan); font-size: 1.5rem; line-height: 1; }
 .crew-apps-row { display: flex; gap: 1.2rem; }
 .crew-app { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; text-decoration: none; color: var(--silver); font-size: 0.8rem; letter-spacing: 0.04em; text-align: center; }
 .crew-app img { width: 76px; height: 76px; border-radius: 18px; border: 1px solid var(--line); }
 .crew-app:hover, .crew-app:focus { color: var(--silver-2); }
+.crew-apps + main .hero { padding-top: 2.5rem; }
 /* Social row (footer, all pages) — Captain's order 2026-11-24 */
 .social-row { display: flex; gap: 1rem; align-items: center; padding: 0.9rem 0 1.1rem; }
 .social-link { color: var(--steel); display: inline-flex; }
